@@ -1,0 +1,14 @@
+#TeXlipse project settings
+#Tue Jul 08 12:32:56 CEST 2014
+markTmpDer=true
+builderNum=2
+outputDir=out/
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=
+mainTexFile=Optimization-BasedTrajectories_MIG2014.tex
+outputFile=mig2014-trajectories.pdf
+langSpell=
+markDer=true
+srcDir=
