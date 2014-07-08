@@ -1,2 +1,20 @@
 \section{Discussion}
 \label{sec:discussion}
+
+\textbf{Convergence}
+The convergence of this algorithm, depends mostly on the how many agents we’ll want in the scene. As we can see, the bigger that number is, the slower it takes to create a patch and the most dangerous it becomes not reaching a solution.
+
+When we have two boundary control points very near each other in space-time coordinates, the harder it will be for the trajectories to converge, since the only way to find a collision free trajectory would be moving those fixed boundary control points. For that, a better technique may be implemented, so when we just want a random initial batch of boundary control points, they are generated in such a way there is enough space between one another. 
+
+
+\textbf{Spatial moving of waypoints only}
+In this paper, we use mostly spatial corrections to the trajectories of the agents. For some scenarios, moving the point in space coordinates may not be the best way to go, it could provoke the control point to try to move outside of the patch boundaries or make a huge change in the agent’s speed.   
+
+Some collisions may be avoided just by changing the time in one of the two movable control points of a segment, thus making the agent move faster or slower without modifying the spatial trajectory. This would solve the problem of going out of the boundaries, but we have to be careful on how we change the time if we don’t want to produce an unrealistic change in velocity.  We also have to be careful that trajectories can never go backwards in time. 
+
+
+\textbf{Obstacles}
+We mentioned earlier a patch may have static agents, called obstacles. With this technique, how can obstacles be added? For a small number of obstacles, we can consider obstacles just like any other agent, and incorporate them into the algorithm with the extra condition that they can never be moved. The only problem, is that obstacles must be well placed. When two obstacles are close enough that the form a tunnel for one initial trajectory, the movable control point will start looping going from one obstacle to another, unable to find a collision free trajectory. A possible solution for this, may be grouping the obstacles that are close to one another and consider them as a bigger obstacle. This will quickly start occupying the area of the patch, so in general, the obstacles will need to be few. 
+
+\textbf{Quality of motion}
+We believe that by visual inspection the quality of motion in our approach is better than the method used by Yersin et al. \cite{Yersin:2009}. There are several methods that can be used to quantify quality of motion in crowds. These include \note{(=====================)}. We plan to use one or more of these methods to assess the quality of our motion in the future.

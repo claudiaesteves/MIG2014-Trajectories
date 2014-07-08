@@ -27,24 +27,31 @@
 
 \begin{description}
 
-\item[Patch - ]{A patch is a set $\{ A, \pi, D, S\}$ where $A$ is a geometrical area with a convex polygonal shape, $\pi$ the period of time of the animation, $D$ and $S$ are the sets of dynamic and static objects, respectively. These last two sets may be empty in case of an empty patch.}
+\item[Patch]{
+A patch is a set $\{ A, \pi, D, S\}$ where $A$ is a geometrical area with a convex polygonal shape, $\pi$ the period of time of the animation and $D$ and $S$ are the sets of dynamic and static objects, respectively.
+These last two sets may be empty in case of an empty patch.
+}
 
-\item[Static obstacles -]{Static objects are simple obstacles whose geometry is fully contained inside the patch.}
+\item[Static obstacles]{
+Static objects are simple obstacles whose geometry is fully contained inside the patch.
+}
 
-\item[Dynamic objects]{Dynamic objects are animated: they are moving in time according to a set of trajectories $T$.}
+\item[Dynamic objects]{
+Dynamic objects are animated; i.e., they are moving in time according to a set of trajectories $T$.
+}
 
 \end{description}
 
-We define a {\bf trajectory} inside a patch as a function going from time to position, more specifically from the subset $[ 0,\pi ]$ to $A$:$ \tau:[t_1,t_2]\rightarrow A, \hspace{0.3cm} 0 \leq t_1 < t_2 \leq \pi$. We represent a trajectory as a list of control points connected by segments. 
+We define a {\bf trajectory} inside a patch as a function going from time to position, more specifically from the subset $[ 0,\pi ]$ to $A$:$ \tau:[t_1,t_2]\rightarrow A, \hspace{0.3cm} 0 \leq t_1 < t_2 \leq \pi$.
+We represent a trajectory as a list of control points connected by segments. 
+\note{THIS I A LITTLE BIT CONFUSING}
 
-A {\bf control point} is a point in space and time. All control points in a trajectory will either be a movable control point or a boundary control point. Boundary control points serve as entry and exit points to the patch and cannot be moved, added or deleted. Movable control points can be moved, added, or removed from the trajectory as long as they do not violate the \note{constraints of the patch, their position must be inside $A$ and the time between $t_1$ and $t_2$.} \\
-\devin{-- Should we state exactly whate these constraints are here? }\\
-\memo{-- Sure, I added a line for that}
+A {\bf control point} is a point in space and time $\mathbf{cp} = \{\mathbf{a}_{cp}, t_{cp}\}$. All control points in a trajectory can either be boundary or movable ones. Boundary control points serve as entry and exit points to the patch and cannot be moved, added or deleted. Movable control points can be moved, added, or removed from the trajectory as long as they do not violate the constraints of the patch; i.e., their positions $\mathbf{a}_{cp}$ must lie inside area $A$ and their time $t_{cp}$ must be between $t_1$ and $t_2$.
 
 A {\bf segment} is a straight line connecting two control points in a specific order. Since these are unidirectional lines in space-time, it is important to remember that they are not allowed to go backwards in time.
 
-There are two categories of dynamic objects: endogenous agents and exogenous agents. {\bf Endogenous agents} remain inside $A$ for the total period of time $\pi$. In order to achieve periodicity for the animation, they are associated with a trajectory $\tau : [0,\pi] \leftarrow A$, such that it respects the periodicity condition: the position at the start and at the end of the animation must be the same, i.e. \mbox{$\tau (0) = \tau (\pi)$}.\\
-{\bf Exogenous agents} go outside $A$. They enter the patch at time $t_{initial}$ and position $a_{initial}$, and they exit at time $t_{final}$ and position $a_{final}$. For each agent we associate a sequence of $n$ trajectories $\{ \tau_1, \tau_2, \dots, \tau_n\}$. Sequences may have only one trajectory, but some agents require additional trajectories in order to satisfy speed and time constraints. The following conditions must be respected in each sequence of trajectories associated with an exogenous agent:
+There are two categories of dynamic objects: endogenous and exogenous agents. {\bf Endogenous agents} remain inside $A$ for the total period of time $\pi$. In order to achieve periodicity for the animation, they are associated with a trajectory $\tau : [0,\pi] \leftarrow A$, such that it respects the periodicity condition: the position at the start and at the end of the animation must be the same, i.e. \mbox{$\tau (0) = \tau (\pi)$}.\\
+{\bf Exogenous agents} go outside $A$. They enter the patch at time $t_{initial}$ and position $a_{initial}$, and they exit at time $t_{final}$ and position $a_{final}$. For each agent we associate a sequence of $n \ge 1$ trajectories $\{ \tau_1, \tau_2, \dots, \tau_n\}$. Sequences may have only one trajectory, but some agents require additional trajectories in order to satisfy speed and time constraints. The following conditions must be respected in each sequence of trajectories associated with an exogenous agent:
 
 \begin{itemize}
 

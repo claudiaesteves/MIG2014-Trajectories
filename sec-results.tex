@@ -1,33 +1,60 @@
 \section{Results}
 \label{sec:results}
 
-We found that our algorithm created trajectories that were free of collisions and produced smooth motion. Below we have a diagram showing the patch in various steps of our algorithm. Next we show the final curved trajectories with various sized input. Lastly we show some performance tests.
+We found that our algorithm created trajectories that were free of collisions and produced smooth motion. In Figure~\ref{fig:res:steps} we have a diagram showing the patch in various steps of our algorithm. Next we show the final curved trajectories with various sized input. Lastly we show some performance tests.
 
 \devin{the images are not lining up how I want them too.}
+\panayiotis{Devin, I took the liberty of modifying the figures below to show you how its typically done. Note the label for referencing the figures in the text.}
 
-\begin{figure}[H]
- \centering
- \includegraphics[width=3in]{images/steps-input.png}
- \caption{caption caption caption}
-\end{figure}
+% \begin{figure}[H]
+%  \centering
+%  \includegraphics[width=3in]{images/steps-input.png}
+%  \caption{caption caption caption}
+% \end{figure}
+% 
+% \begin{figure}[H]
+%  \centering
+%  \includegraphics[width=3in]{images/steps-connected.png}
+%  \caption{caption caption caption}
+% \end{figure}
+% 
+% \begin{figure}[H]
+%  \centering
+%  \includegraphics[width=3in]{images/steps-collisionFree.png}
+%  \caption{caption caption caption}
+% \end{figure}
+% 
+% \begin{figure}[H]
+%  \centering
+%  \includegraphics[width=3in]{images/steps-smoothed.png}
+%  \caption{caption caption caption}
+% % \end{figure}
 
-\begin{figure}[H]
- \centering
- \includegraphics[width=3in]{images/steps-connected.png}
- \caption{caption caption caption}
-\end{figure}
 
-\begin{figure}[H]
+\begin{figure*}[t]
  \centering
- \includegraphics[width=3in]{images/steps-collisionFree.png}
- \caption{caption caption caption}
-\end{figure}
-
-\begin{figure}[H]
- \centering
- \includegraphics[width=3in]{images/steps-smoothed.png}
- \caption{caption caption caption}
-\end{figure}
+ \begin{subfigure}[b]{0.24\linewidth}
+ 	\includegraphics[width=\linewidth]{images/steps-input.png}
+ 	\caption{Input}
+ \end{subfigure}
+ % 
+ \begin{subfigure}[b]{0.24\linewidth}
+ 	\includegraphics[width=\linewidth]{images/steps-connected.png}
+ 	\caption{Connected}
+ \end{subfigure}
+ %
+ \begin{subfigure}[b]{0.24\linewidth}
+ 	\includegraphics[width=\linewidth]{images/steps-collisionFree.png}
+ 	\caption{Collision Free}
+ \end{subfigure}
+ %
+ \begin{subfigure}[b]{0.24\linewidth}
+ 	\includegraphics[width=\linewidth]{images/steps-smoothed.png}
+ 	\caption{Smoothed Out}
+ \end{subfigure}
+ \caption{Various steps of our algorithm.}
+ \label{fig:res:steps}
+\end{figure*}
 
 
 The performance was measured on a computer with a quad core 2.8 GHz processor and 8GB of RAM. We found trajectories for patches with randomly generated entry and exit points. The patches all had base square of size 16 by 16. The period was 10 seconds. There were 20 samples for each number of agents between 1 and 50 for a total of 1000 samples. 994 of these were collision free. The other 6 were stopped after they reached 2000 iterations. We recorded the number of iterations required for collision free trajectories as well as the computation time in seconds.
