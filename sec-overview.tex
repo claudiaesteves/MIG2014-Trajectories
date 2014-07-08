@@ -6,7 +6,7 @@
 %%----------------------------------------------------------------
 \begin{figure*}[t]
 	\begin{center}
-	\includegraphics[width=14cm]{./images/overview.png}
+	\includegraphics[width=14cm]{./images/overview-hd.png}
 	\caption{ Caption caption caption caption caption caption caption caption caption caption\label{overview}}
 	\end{center}
 \end{figure*}
@@ -53,8 +53,8 @@ Note that the second condition implicitly implies that in sequences with multipl
 
 \item[Pattern -]{If a patch is a spatio-temporal cube (or any other right prism, depending on the type of polygon used as its area, then a pattern could be defined as one lateral side of the \note{cube (or right prism).} Specifically, it is a rectangle whose base is one of the edges of the polygonal area (we define $I$ as this two dimensional vector), and its height is equal to the period. These patterns also include the sets of boundary control points. We divide this set evenly into two subsets: Input and Output. The Input set contains the boundary control points where exogenous agents begin their trajectories; we call these Entry Points. Conversely the elements of Output are called Exit Points. They establish the position in time and space that the exogenous agents finish their paths. Formally defined, a patch P is:
 $$ P = {l, p_i, I_i [p_i, t_i], O_j[p_j, t_j]}$$
-We populate virtual environments by sticking patches together. Thus, we have to ensure continuity between trajectories for exogenous agents passing through two contiguous patches. This means that two adjacent patches must \note{have a similar pattern on the side they share}. The vector $l$ \claudia{Is this vector $l$ or $I$?, please check } and period must be equivalent and the sets of Input and Output are exchanged. If we have $P_1={l, pi, I [p_1,t_1], O[p_2,t_2]}$ and $P_2={lÕ, piÕ, IÕ[pÕ_2, tÕ_2], OÕ[pÕ_1, tÕ_1]}$, then, in order to satisfy $C^0$ continuity we must ensure: 
-$$ l=lÕ, pi=piÕ, p_1=pÕ_1, t_1=tÕ_1, p_2=pÕ_2, t_2=tÕ_2.$$
+We populate virtual environments by sticking patches together. Thus, we have to ensure continuity between trajectories for exogenous agents passing through two contiguous patches. This means that two adjacent patches must \note{have a similar pattern on the side they share}. The vector $l$ \claudia{Is this vector $l$ or $I$?, please check } and period must be equivalent and the sets of Input and Output are exchanged. If we have $P_1={l, pi, I [p_1,t_1], O[p_2,t_2]}$ and $P_2={lï¿½, piï¿½, Iï¿½[pï¿½_2, tï¿½_2], Oï¿½[pï¿½_1, tï¿½_1]}$, then, in order to satisfy $C^0$ continuity we must ensure: 
+$$ l=lï¿½, pi=piï¿½, p_1=pï¿½_1, t_1=tï¿½_1, p_2=pï¿½_2, t_2=tï¿½_2.$$
 We then say $P_1$ is the mirror pattern of $P_2$. In the animation, this will be seen as an agent going from one patch to an adjacent one. 
 If the area of a patch is a square, the patch defines 4 patterns, one for each of its sides. Patterns defined by a patch have the property that the sum of the cardinality of all the Inputs is the same as the sum of the cardinality of all Outputs. We call this the parity condition: $\sum(|Inputs|)= \sum(|Outputs|)$.
 
