@@ -253,36 +253,65 @@ With $t_c$, the time at which the two line segments are closest we can easily ca
 %%-------------------------------------------------------------------
 
 
-We compute a minimum distance between each pair of trajectories. We store each value in a minimum distance matrix M. The position in the matrix corresponds to the trajectory ID. So the value at M(a, b) would be the minimum distance from trajectory a to trajectory b. It’s good to note that this value will be the same as M(b,a). Furthermore M(x,x) will always be zero. These facts can be used to reduce computation while filling out the minimum distance matrix.
+We compute a minimum distance between each pair of trajectories. We store each value in a minimum distance matrix $M$. The position in the matrix corresponds to the trajectory ID. So the value at $M(a, b)$ would be the minimum distance from trajectory $a$ to trajectory $b$. It’s good to note that this value will be the same as $M(b,a)$. Furthermore $M(x,x)$ will always be zero. These facts can be used to reduce computation while filling out the minimum distance matrix.
+\panayiotis{Do we have an image for this distance matrix?}
 
-Our algorithm creates collision free trajectories by adding and modifying control points. We can guarantee this by looking at the minimum distance matrix. If every value in the matrix is above some threshold then we know that for the entire period of the patch no two agents come closer than that threshold. So if we make that threshold equal to the sum of the radii being compared, those agents will never touch.
+Our algorithm (see Algorithm~\ref{algo:control-points}) creates collision free trajectories by adding and modifying control points. We can guarantee this by looking at the minimum distance matrix. If every value in the matrix is above some threshold then we know that for the entire period of the patch no two agents come closer than that threshold. So if we make that threshold equal to the sum of the radii being compared, those agents will never touch.
 
+\panayiotis{Write the pseudo code in an algorithm format}
 
-pseudo-code
-compute minimum distance matrix
-while(there exists at least one distance less than its threshold):
-    find smallest value in that matrix, look at the two trajectories that correspond to that value
-update both trajectories to either move or add a control point
-update minimum distance matrix
+%%-------------------------------------------------------------------
+%% Control Points algorithm
+%%-------------------------------------------------------------------
+\begin{algorithm}[t]
+pseudo-code\\
+compute minimum distance matrix\\
+while(there exists at least one distance less than its threshold):\\
+    find smallest value in that matrix, look at the two trajectories that correspond to that value\\
+update both trajectories to either move or add a control point\\
+update minimum distance matrix\\
+\caption{The control points generation algorithm}
+\label{algo:control-points}
+\end{algorithm}
+%%-------------------------------------------------------------------
+%% Control Points algorithm
+%%-------------------------------------------------------------------
+
 
 We begin by computing the minimum distance matrix. Then while collisions still exist we find the smallest value in the minimum distance matrix. From that we find the corresponding trajectories and a point of closest approach for each trajectory. We then find an updated position for each of these points.
 
-To find the the updated position of a new point we add a correction force to its current position.
+To find the the updated position of a new point we add a correction force $\mathbf{F}_c$ to its current position $\mathbf{P}_1^{old}$.
 
-New P1 = old P1 + Correction Force on P1
+
+\begin{equation}
+	\mathbf{P}_1^{new} = \mathbf{P}_1^{old} + \mathbf{F}_c
+\end{equation}
+
+\panayiotis{Why $P_1$ and not just $\mathbf{p}$? Clarify p1 and p2}
+
+\panayiotis{assign symbols for all forces and position mentioned to make the equations more compact\ldots}
 
 The correction force is found based on the radius of the two agents, the position of the closest point, a constant weight to help reduce speed artifacts and prevent agents from leaving the bounds the patch, and a small random noise rotation to help prevent infinite loops.
 
-Correction Force on P1 = Rotation Matrix * (p1 - p2).normalized * threshold * weightOfP1
+\begin{equation}
+	Correction Force on P1 = Rotation Matrix * \widehat{(\mathbf{p}_1 - \mathbf{p}_2)}* threshold * weightOfP1
+\end{equation}
 
-NOTE: threshold = radius1 + radius2. In our implementation r1 == r2 so we just had a constant threshold
+NOTE: threshold = radius1 + radius2. In our implementation $r_1 == r_2$ so we just had a constant threshold
 
-Rotation Matrix rotation of plus or minus some small angle. 0.5 radians ~ 28.65°
+Rotation Matrix rotation of plus or minus some small angle. $0.5$ radians $\approx28.65^{o}$.
 
-weightOfP1 = { speed2 / (speed1 + speed2) if the point won’t go outside the patch}
-               { 0                        if the force would result in the point going outside the patch}
+\panayiotis{SHORTEN THE TEXT IN THE EQUATIONS!!}
+\begin{equation}
+weightOfP1 = \left\{
+	\begin{array}{l l}
+		speed_2 / (speed_1 + speed_2)	&	\quad \text{if the point won’t go outside the patch}\\
+		0								&	\quad \text{if the force would result in the point going outside the patch}
+	\end{array}
+	\right.
+\end{equation}
 
-The calculations for P2 are symmetric. Once we have this new point for the trajectory we check to see if there is already a control point within a small time interval of the new point. If there is we move that control point to this new position in space and time. Otherwise we add a control 
+The calculations for $P_2$ are symmetric. Once we have this new point for the trajectory we check to see if there is already a control point within a small time interval of the new point. If there is we move that control point to this new position in space and time. Otherwise we add a control 
 point in the trajectory at this new position. Finally we update the minimum distance matrix. We do not need to recheck all the distances in the matrix, only the ones that interact with the trajectory we have modified.
 
 We find that in many situations this algorithm converges quickly and produces collision free trajectories. However there are still situations where it converges slowly or even gets stuck in an infinite loop.
@@ -290,14 +319,17 @@ We find that in many situations this algorithm converges quickly and produces co
 \subsection{Smoothing}
 
 Smoothing:
-We have obtained some collision free trajectories, but they may have a jerky trajectory, so we need a final the step to smooth them. We need to take special care of how we do this, we don’t want the trajectories to change in such a way that they make new collisions. A simple approach is to use cubic splines. Cubic splines connects every pair of points in a trajectory with a polynomial function of degree 3
+We have obtained some collision free trajectories, but they may have a jerky trajectory, so we need a final the step to smooth them. We need to take special care of how we do this, we don’t want the trajectories to change in such a way that they make new collisions. A simple approach is to use cubic splines. Cubic splines connects every pair of points in a trajectory with a polynomial function of degree $3$:
 
+\begin{equation}
  S(x)=a+bx+ cx^2+ dx^3
-In total, we will need to find the coefficients a, b, c, and d for every segment we have in our trajectory. Those coefficients are determined by continuity C^1 restrictions: 
+\end{equation}
 
-For every spline associated with a trajectory between point p1=(x1,y1,t1) and p2=(x2,y2,t2), the spline must pass through those same points, that is, S(t1)=(x1,y1) and S(t2)=(x2,y2).
+In total, we will need to find the coefficients a, b, c, and d for every segment we have in our trajectory. Those coefficients are determined by continuity $C^1$ restrictions: 
 
-For every two contiguous splines S1 and S2, for the common point they share p, the velocity must be equivalent, that is,  S1’(p)=S2’(p).
+For every spline associated with a trajectory between point $p1=(x_1,y_1,t_1)$ and $p_2=(x_2,y_2,t_2)$, the spline must pass through those same points, that is, $S(t_1)=(x_1,y_1)$ and $S(t_2)=(x_2,y_2)$.
+
+For every two contiguous splines $S_1$ and $S_2$, for the common point they share p, the velocity must be equivalent, that is,  $S_1’(p)=S_2’(p)$.
   
 This restrictions can be accommodated in a such way that they form a system of linear equations that can be solved using Cholesky decomposition.
 
@@ -315,9 +347,8 @@ There may be cases, even with a healthy number of tacks, that the splines still 
 Maybe next paragraph goes better in discussion?
 Having splines for trajectories is better than having simple straight lines, but we know humans don’t  follow either of them when walking,  so other methods can be tried to improve this initial approach.
 
-
-
  - input : piecewiselinear trajectories. output : a certain kind of splines. Objective: remove sharp changes in speed and orientation
+ 
  - should be short. 
 
 
