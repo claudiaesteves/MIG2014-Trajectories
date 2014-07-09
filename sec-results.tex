@@ -6,31 +6,6 @@ We found that our algorithm created trajectories that were free of collisions an
 \devin{the images are not lining up how I want them too.}
 \panayiotis{Devin, I took the liberty of modifying the figures below to show you how its typically done. Note the label for referencing the figures in the text.}
 
-% \begin{figure}[H]
-%  \centering
-%  \includegraphics[width=3in]{images/steps-input.png}
-%  \caption{caption caption caption}
-% \end{figure}
-% 
-% \begin{figure}[H]
-%  \centering
-%  \includegraphics[width=3in]{images/steps-connected.png}
-%  \caption{caption caption caption}
-% \end{figure}
-% 
-% \begin{figure}[H]
-%  \centering
-%  \includegraphics[width=3in]{images/steps-collisionFree.png}
-%  \caption{caption caption caption}
-% \end{figure}
-% 
-% \begin{figure}[H]
-%  \centering
-%  \includegraphics[width=3in]{images/steps-smoothed.png}
-%  \caption{caption caption caption}
-% % \end{figure}
-
-
 \begin{figure*}[t]
  \centering
  \begin{subfigure}[b]{0.24\linewidth}
@@ -57,42 +32,50 @@ We found that our algorithm created trajectories that were free of collisions an
 \end{figure*}
 
 
-The performance was measured on a computer with a quad core 2.8 GHz processor and 8GB of RAM. We found trajectories for patches with randomly generated entry and exit points. The patches all had base square of size 16 by 16. The period was 10 seconds. There were 20 samples for each number of agents between 1 and 50 for a total of 1000 samples. 994 of these were collision free. The other 6 were stopped after they reached 2000 iterations. We recorded the number of iterations required for collision free trajectories as well as the computation time in seconds.
+The performance was measured on a computer with an Intel Xeon quad core 2.8 GHz processor and 8GB of RAM. We found trajectories for patches with randomly generated entry and exit points. The patches all had base square of size 16 by 16. The period was 10 seconds. There were 20 samples for each number of agents between 1 and 50 for a total of 1000 samples. 994 of these were collision free. The other 6 were stopped after they reached 2000 iterations. We recorded the number of iterations required for collision free trajectories as well as the computation time in seconds.
 
-\begin{figure}[H]
+\begin{figure*}[t]
  \centering
- \includegraphics[width=3in]{images/res-10-entry-exit.png}
- \caption{caption caption caption}
-\end{figure}
+%
+\begin{subfigure}[b]{0.24\linewidth}
+	\includegraphics[width=\linewidth]{images/res-10-entry-exit.png}
+	\caption{10 Entry/Exit Points}
+ \end{subfigure}
+%
+ \begin{subfigure}[b]{0.24\linewidth}
+	\includegraphics[width=\linewidth]{images/res-20-entry-exit.png}
+	\caption{20 Entry/Exit Points}
+ \end{subfigure}
+%
+ \begin{subfigure}[b]{0.24\linewidth}
+	\includegraphics[width=\linewidth]{images/res-30-entry-exit.png}
+	\caption{30 Entry/Exit Points}
+ \end{subfigure}
+%
+ \begin{subfigure}[b]{0.24\linewidth}
+	\includegraphics[width=\linewidth]{images/res-40-entry-exit.png}
+	\caption{40 Entry/Exit Points}
+ \end{subfigure}
+%
+\caption{Various input to our algorithm.}
+\label{fig:res:inputs}
+\end{figure*}
 
-\begin{figure}[H]
+\begin{figure*}[t]
  \centering
- \includegraphics[width=3in]{images/res-20-entry-exit.png}
- \caption{caption caption caption}
-\end{figure}
-
-\begin{figure}[H]
+%
+\begin{subfigure}[b]{0.48\linewidth}
  \centering
- \includegraphics[width=3in]{images/res-30-entry-exit.png}
- \caption{caption caption caption}
-\end{figure}
-
-\begin{figure}[H]
+	\includegraphics[width=\linewidth]{images/res-iter-graph.png}
+	\caption{}
+ \end{subfigure}
+%
+\begin{subfigure}[b]{0.48\linewidth}
  \centering
- \includegraphics[width=3in]{images/res-40-entry-exit.png}
- \caption{caption caption caption}
-\end{figure}
-
-
-
-\begin{figure}[H]
- \centering
- \includegraphics[width=3in]{images/res-iter-graph.png}
- \caption{caption caption caption}
-\end{figure}
-
-\begin{figure}[H]
- \centering
- \includegraphics[width=3in]{images/res-time-graph.png}
- \caption{caption caption caption}
-\end{figure}
+	\includegraphics[width=\linewidth]{images/res-time-graph.png}
+	\caption{}
+ \end{subfigure}
+% 
+\caption{\textbf{(a)} Shows the number of iterations required to converge. Note that the blue line at 2000 iterations is where we stopped the program. 6  out of 1000 inputs were stopped at 2000 iterations. \textbf{(b)} The time to converge was measured in seconds.  \devin{should I remove the titles on the images of the graphs, and instead put their title in the caption?} }
+\label{fig:res:graphs}
+\end{figure*}
