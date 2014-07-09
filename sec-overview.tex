@@ -42,7 +42,9 @@ Dynamic objects are animated; i.e., they are moving in time according to a set o
 
 \end{description}
 
-We define a {\bf trajectory} inside a patch as a function going from time to position, more specifically from the subset $[ 0,\pi ]$ to $A$:$ \tau:[t_1,t_2]\rightarrow A, \hspace{0.3cm} 0 \leq t_1 < t_2 \leq \pi$.
+We define a {\bf trajectory} inside a patch as a function $\tau$ going from time to position, more specifically from a subset of $[ 0,\pi ]$ to $A$.
+
+$ \tau:[t_1,t_2]\rightarrow A, \hspace{0.3cm} 0 \leq t_1 < t_2 \leq \pi$.
 We represent a trajectory as a list of control points connected by segments. 
 \note{THIS I A LITTLE BIT CONFUSING}
 
@@ -50,14 +52,14 @@ A {\bf control point} is a point in space and time $\mathbf{cp} = \{\mathbf{a}_{
 
 A {\bf segment} is a straight line connecting two control points in a specific order. Since these are unidirectional lines in space-time, it is important to remember that they are not allowed to go backwards in time.
 
-There are two categories of dynamic objects: endogenous and exogenous agents. {\bf Endogenous agents} remain inside $A$ for the total period of time $\pi$. In order to achieve periodicity for the animation, they are associated with a trajectory $\tau : [0,\pi] \leftarrow A$, such that it respects the periodicity condition: the position at the start and at the end of the animation must be the same, i.e. \mbox{$\tau (0) = \tau (\pi)$}.\\
+There are two categories of dynamic objects: endogenous and exogenous agents. {\bf Endogenous agents} remain inside $A$ for the total period of time $\pi$. In order to achieve periodicity for the animation, they are associated with a trajectory $\tau : [0,\pi] \rightarrow A$, such that it respects the periodicity condition: the position at the start and at the end of the animation must be the same, i.e. \mbox{$\tau (0) = \tau (\pi)$}.\\
 {\bf Exogenous agents} go outside $A$. They enter the patch at time $t_{initial}$ and position $a_{initial}$, and they exit at time $t_{final}$ and position $a_{final}$. For each agent we associate a sequence of $n \ge 1$ trajectories $\{ \tau_1, \tau_2, \dots, \tau_n\}$. Sequences may have only one trajectory, but some agents require additional trajectories in order to satisfy speed and time constraints. The following conditions must be respected in each sequence of trajectories associated with an exogenous agent:
 
 \begin{itemize}
 
 \item{$a_{initial}$ and $a_{final}$ must be points in the border of $A$. Otherwise, they couldn't be exogenous agents.}
 
-\item{If the sequence is composed by more than one trajectory, for each two contiguous trajectories, the following must be true to ensure continuity: $\tau_i(\pi) = \tau_{i_{next}}(0)$.}
+\item{If the sequence is composed by more than one trajectory, for each two contiguous trajectories, the following must be true to ensure continuity: $\tau_i(\pi) = \tau_{i+1}(0)$.}
 
 \end{itemize}
 
