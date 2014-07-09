@@ -1,5 +1,5 @@
-\section{Method overview}
-\label{sec:overview}
+\section{Methodology}
+\label{sec:method}
 
 %%----------------------------------------------------------------
 %% Overview Figure
@@ -77,5 +77,63 @@ A patch defines a set of Patterns, and conversely, a set of patterns satisfying 
 
 \end{description}
 
+\subsection{Overview}
+\label{method:overview}
+
+The objective is, given a set of patterns, we want to construct a patch.
+This process has three main steps:
+\begin{enumerate}
+  \item Make a matching between the elements in the Input and Output sets contained within a patch. In this step, we connect Entry to Exit Points based on a scoring function. This function tries to keep agents close to their prefered speed while at the same time avoiding connections to similar patterns, thus reducing unwanted u-turns.  The input for this function is a set of patterns and the output is a set of piecewise linear trajectories connecting the entry and exit points.
+  \item Create collision free trajectories for these pairings. We start with simple line trajectories and start bending them until they are collision free. Points lying at the borders, i.e. the Entry and Exit points, are hard restraints and can never be moved.
+  \item Smoothing trajectories (if needed).  Last, we use splines to minimize the hard turns. We make sure the new trajectories stay close to the original ones, lest we create new collisions.
+\end{enumerate}
+
+\note{Problem : is to compute internal trajectories that join all boundary conditions with conitnuous and believable motion trajectories. 
+
+2 steps: 
+ - step 1: connect waypoints
+INPUT first boudnary conditions are ``alone'' in patches $\rightarrow$ associate/connect waypoints
+ them 
+OUTPUT : initial trajectories (piecewise linear trajs, possibly colliding, with ``good'' properties that we will define later on)
+
+ - step 2: optimize intial trajectories by moving control points to remove collisions
+    INPUIT : initial trazjectories
+      OUTPUT : colliision trajectories, still enforcing boundary conditions
+      
+- step 3 is smoothing
+}       
 
 
+\subsection{Connecting Boundary Control Points}
+
+The first step to this algorithm is to match all the entry and exit points.  To do this, we have to measure how good or bad a match is. Intuitively, there are some better matches than others, Judging by sight, trajectories passing near the center of the patch look better that the ones staying close to the borders. We can consider some other aspects too, like how close the speed needed for the agent to go from the Entry Point to the Exit Point is to comfort speed. We use a comfort speed of $1.33~m/s$ which is the normal walking speed of humans in an unconstrained environment.
+
+For a square patch, we prefer to match points with points on the opposite pattern. Then the points on the contiguous pattern and finally, the points that are in the same pattern. If there are multiple options on the same pattern we choose the point whose associated trajectory is closest to comfort speed.
+
+To solve this matching problem, we make use of the Gale-Shapley algorithm~\cite{gale1962college} (see Algorithm~\ref{alg:stable-matching}), commonly referred to as the algorithm to solve the stable marriage problem.  This algorithm assures that at the end, if we have Alice engaged to Bob and Carol engaged to Dave, it is not possible for Alice to prefer Dave and Dave to prefer Alice. We call that a stable matching.  
+
+This pseudocode demonstrates the Gale-Shapley algorithm in relation to two equal lists of men and women who are being matched for marriage. However the algorithm generalizes to any matchable objects, which in our case is entry and exit points.
+
+%%-------------------------------------------------------------------
+%% The Stable Matching Algorithm by Gale-Shapley
+%%-------------------------------------------------------------------
+\begin{algorithm}[t]
+Put here the algorith of stablematching
+\caption{Stable Matching Algorithm}
+\label{alg:stable-matching}
+\end{algorithm}
+%%-------------------------------------------------------------------
+%% The Stable Matching Algorithm by Gale-Shapley
+%%-------------------------------------------------------------------
+
+
+All we need in order to use this algorithm is a to generate preferences for entry and exit points. We do this with the following steps:
+\begin{enumerate}
+  \item Find the speed it would take to travel from an Entry Point to an Exit Point.  Let’s assume $(p_1, t_1)$ is position and time of the Entry Point and $(p_2,t_2)$ the equivalent of the Exit point. Speed is $d/t$ where $d=|p_1-p_2|$ and $time=t_2-t_1$ in case $t_2>t_1$. Otherwise, $time=period+t_2-t_1$. More details on why we take this time will be given later when we create the initial set of trajectories.
+  \item Now, we assign each pair of points a number between $0$ and $\pi/2$, where $0$ represents maximum closeness to comfort speed with $arctan(|comfort speed -speed|)$.
+  \item We add penalties for points being in the same patch, for those points, we add $4$. For points lying in the contiguous pattern we also add a smaller penalty, $2$.
+  \item We sort each list.
+\end{enumerate}
+\panayiotis{The steps above need editing}    
+ 
+We will have a list similar to this for each entry and exit point, we call this list the proposal list:
