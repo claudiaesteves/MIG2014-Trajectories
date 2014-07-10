@@ -278,7 +278,7 @@ With $t_c$, the time at which the two line segments are closest we can easily ca
 
 
 
-We compute a minimum distance between each pair of trajectories. We store each value in a minimum distance matrix $M$. The position in the matrix corresponds to the trajectory ID. So the value at $M(\tau_i, \tau_j)$ would be the minimum distance from trajectory $\tau_i$ to trajectory $\tau_j$. It's good to note that this value will be the same as $M(\tau_j,\tau_i)$. Furthermore $M(\tau_i,\tau_i)$ will always be zero and distance for trajectories that don't intersect in time, we set them to a number bigger than the threshold for collisions, for example $100$ for a threshold of $1$ (see Table ~\ref{tab:minimum-distances}). These facts can be used to reduce computation while filling out the minimum distance matrix.
+We compute a minimum distance between each pair of trajectories. We store each value in a minimum distance matrix $M$. The position in the matrix corresponds to the trajectory ID. So the value at $M(i, j)$ would be the minimum distance from trajectory $\tau_i$ to trajectory $\tau_j$. It's good to note that this value will be the same as $M(j,i)$. Furthermore $M(i,i)$ will always be zero and distance for trajectories that don't intersect in time, we set them to a number bigger than the threshold for collisions, for example $100$ for a threshold of $1$ (see Table ~\ref{tab:minimum-distances}). These facts can be used to reduce computation while filling out the minimum distance matrix.
 
 %%-------------------------------------------------------------------
 %% The Minimum Distances Table
@@ -311,12 +311,14 @@ Our algorithm (see Algorithm~\ref{algo:control-points}) creates collision free t
 %% Control Points algorithm
 %%-------------------------------------------------------------------
 \begin{algorithm}[t]
-pseudo-code\\
-compute minimum distance matrix\\
-while(there exists at least one distance less than its threshold):\\
-    find smallest value in that matrix, look at the two trajectories that correspond to that value\\
-update both trajectories to either move or add a control point\\
-update minimum distance matrix\\
+compute minimum distance matrix $M$\;
+\While{there exists at least one entry in $M$ below the threshold}{
+	find indexes $i$  and $j$ for which $M(i,j)$ has the smallest value $d$\;
+	find temporal control points $\mathbf{cp}_i$ and $\mathbf{cp}_j$ in $\tau_i$ and $\tau_j$ that are at distance $d$ \;
+	apply repulsion forces to $\mathbf{cp}_i$ and $\mathbf{cp}_j$\;
+	update  $\tau_i$ and $\tau_j$\;
+	update $M$ \;
+	}
 \caption{The control points generation algorithm}
 \label{algo:control-points}
 \end{algorithm}
