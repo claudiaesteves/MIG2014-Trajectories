@@ -311,13 +311,13 @@ Our algorithm (see Algorithm~\ref{algo:control-points}) creates collision free t
 %% Control Points algorithm
 %%-------------------------------------------------------------------
 \begin{algorithm}[t]
-compute minimum distance matrix $M$\;
+Compute minimum distance matrix $M$\;
 \While{there exists at least one entry in $M$ below the threshold}{
-	find indexes $i$  and $j$ for which $M(i,j)$ has the smallest value $d$\;
-	find temporal control points $\mathbf{cp}_i$ and $\mathbf{cp}_j$ in $\tau_i$ and $\tau_j$ that are at distance $d$ \;
-	apply repulsion forces to $\mathbf{cp}_i$ and $\mathbf{cp}_j$\;
-	update  $\tau_i$ and $\tau_j$\;
-	update $M$ \;
+	Find indexes $i$  and $j$ for which $M(i,j)$ has the smallest value $d$\;
+	Find temporal control points $\mathbf{cp}_i$ and $\mathbf{cp}_j$ in $\tau_i$ and $\tau_j$ that are at distance $d$ \;
+	Apply repulsion forces to $\mathbf{cp}_i$ and $\mathbf{cp}_j$\;
+	Update  $\tau_i$ and $\tau_j$\;
+	Update $M$ \;
 	}
 \caption{The control points generation algorithm}
 \label{algo:control-points}
