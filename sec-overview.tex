@@ -48,16 +48,16 @@ $ \tau:[t_1,t_2]\rightarrow A, \hspace{0.3cm} 0 \leq t_1 < t_2 \leq \pi$.
 We represent a trajectory as a list of control points connected by segments. 
 \note{THIS I A LITTLE BIT CONFUSING}
 
-A {\bf control point} is a point in space and time $\mathbf{cp} = \{\mathbf{a}_{cp}, t_{cp}\}$. All control points in a trajectory can either be boundary or movable ones. Boundary control points serve as entry and exit points to the patch and cannot be moved, added or deleted. Movable control points can be moved, added, or removed from the trajectory as long as they do not violate the constraints of the patch; i.e., their positions $\mathbf{a}_{cp}$ must lie inside area $A$ and their time $t_{cp}$ must be between $t_1$ and $t_2$.
+A {\bf control point} is a point in space and time $\mathbf{cp} = \{\mathbf{p}_{cp}, t_{cp}\}$. All control points in a trajectory can either be boundary or movable ones. Boundary control points serve as entry and exit points to the patch and cannot be moved, added or deleted. Movable control points can be moved, added, or removed from the trajectory as long as they do not violate the constraints of the patch; i.e., their positions $\mathbf{p}_{cp}$ must lie inside area $A$ and their time $t_{cp}$ must be between $t_1$ and $t_2$.
 
 A {\bf segment} is a straight line connecting two control points in a specific order. Since these are unidirectional lines in space-time, it is important to remember that they are not allowed to go backwards in time.
 
 There are two categories of dynamic objects: endogenous and exogenous agents. {\bf Endogenous agents} remain inside $A$ for the total period of time $\pi$. In order to achieve periodicity for the animation, they are associated with a trajectory $\tau : [0,\pi] \rightarrow A$, such that it respects the periodicity condition: the position at the start and at the end of the animation must be the same, i.e. \mbox{$\tau (0) = \tau (\pi)$}.\\
-{\bf Exogenous agents} go outside $A$. They enter the patch at time $t_{initial}$ and position $a_{initial}$, and they exit at time $t_{final}$ and position $a_{final}$. For each agent we associate a sequence of $n \ge 1$ trajectories $\{ \tau_1, \tau_2, \dots, \tau_n\}$. Sequences may have only one trajectory, but some agents require additional trajectories in order to satisfy speed and time constraints. The following conditions must be respected in each sequence of trajectories associated with an exogenous agent:
+{\bf Exogenous agents} go outside $A$. They enter the patch at time $t_{initial}$ and position $\mathbf{p}_{initial}$, and they exit at time $t_{final}$ and position $\mathbf{p}_{final}$. For each agent we associate a sequence of $n \ge 1$ trajectories $\{ \tau_1, \tau_2, \dots, \tau_n\}$. Sequences may have only one trajectory, but some agents require additional trajectories in order to satisfy speed and time constraints. The following conditions must be respected in each sequence of trajectories associated with an exogenous agent:
 
 \begin{itemize}
 
-\item{$a_{initial}$ and $a_{final}$ must be points in the border of $A$. Otherwise, they couldn't be exogenous agents.}
+\item{$\mathbf{p}_{initial}$ and $\mathbf{p}_{final}$ must be points in the border of $A$. Otherwise, they couldn't be exogenous agents.}
 
 \item{If the sequence is composed by more than one trajectory, for each two contiguous trajectories, the following must be true to ensure continuity: $\tau_i(\pi) = \tau_{i+1}(0)$.}
 
@@ -108,7 +108,7 @@ OUTPUT : initial trajectories (piecewise linear trajs, possibly colliding, with 
 
 \subsection{Connecting Boundary Control Points}
 
-The first step to this algorithm is to match all the entry and exit points.  To do this, we have to measure how good or bad a match is. Intuitively, there are some better matches than others, Judging by sight, trajectories passing near the center of the patch look better that the ones staying close to the borders. We can consider some other aspects too, like how close the speed needed for the agent to go from the Entry Point to the Exit Point is to comfort speed. We use a comfort speed of $1.33~m/s$ which is the normal walking speed of humans in an unconstrained environment.
+The first step to this algorithm is to match all the entry and exit points.  To do this, we have to measure how good or bad a match is. Intuitively, there are some better matches than others, Judging by sight, trajectories passing near the center of the patch look better that the ones staying close to the borders. We can consider some other aspects too, like how close the speed needed for the agent to go from the Entry Point to the Exit Point is to comfort speed. We use a comfort speed $u_{cft}$ of $1.33~m/s$ which is the normal walking speed of humans in an unconstrained environment.
 
 For a square patch, we prefer to match points with points on the opposite pattern. Then the points on the contiguous pattern and finally, the points that are in the same pattern. If there are multiple options on the same pattern we choose the point whose associated trajectory is closest to comfort speed.
 
@@ -131,8 +131,8 @@ Put here the algorith of stablematching
 
 All we need in order to use this algorithm is a to generate preferences for entry and exit points. We do this with the following steps:
 \begin{enumerate}
-  \item Find the speed it would take to travel from an Entry Point to an Exit Point.  Letís assume $(p_1, t_1)$ is position and time of the Entry Point and $(p_2,t_2)$ the equivalent of the Exit point. Speed is $d/t$ where $d=|p_1-p_2|$ and $time=t_2-t_1$ in case $t_2>t_1$. Otherwise, $time=period+t_2-t_1$. More details on why we take this time will be given later when we create the initial set of trajectories.
-  \item Now, we assign each pair of points a number between $0$ and $\pi/2$, where $0$ represents maximum closeness to comfort speed with $arctan(|comfort speed -speed|)$.
+  \item Find the speed it would take to travel from an Entry Point to an Exit Point.  Let”≥ assume $(\mathbf{p}_1, t_1)$ is position and time of the Entry Point and $(\mathbf{p}_2,t_2)$ the equivalent of the Exit point. Speed $u$ is $d/t$ where $d=|\mathbf{p}_1-\mathbf{p}_2|$ and $t=t_2-t_1$ in case $t_2>t_1$. Otherwise, $t=period+t_2-t_1$. More details on why we take this time will be given later when we create the initial set of trajectories.
+  \item Now, we assign each pair of points a number between $0$ and $\pi/2$, where $0$ represents maximum closeness to comfort speed with $arctan(|u_{cft} -u|)$.
   \item We add penalties for points being in the same patch, for those points, we add $4$. For points lying in the contiguous pattern we also add a smaller penalty, $2$.
   \item We sort each list.
 \end{enumerate}
@@ -182,7 +182,7 @@ We make further adjustments in the initial trajectory in some special cases. For
 
 - when you connect two boundary conditions, you connect two spation temporal waypoints. This means that you determine this way where characters enter, where they exit patches and the speed between waypoints. 
 
-- we can define what is a ìgoodî connection: avoid half turn, avoid extreme speeds. 
+- we can define what is a ‘ßood‘†connection: avoid half turn, avoid extreme speeds. 
 
 - we define an objective function, we solve this using the stable marriage problem. 
 
@@ -202,7 +202,7 @@ summarize what you get as an aoutput, and what is the next step.
 
 \panayiotis{Make sure for all the equation that the correct symbols are inserted: bold for vectors, normal fonts for scalars, etc.}
 
-We are given a set of trajectories within a patch consisting of both movable and boundary control points. What we expect in return is modified trajectories that have maintained their spatiotemporal entrance and exit points while removing all collisions throughout the entire period of the patch. Our objective is to use these patches in larger crowd simulations of people. We would like to create trajectories that could represent human motion. We focus on creating collision free motion since obvious collisions in simulations greatly reduces the realism of the animation.
+We are given a set of trajectories within a patch consisting of both movable and boundary control points. What we expect in return is modified trajectories that have maintained their spatio-temporal entrance and exit points while removing all collisions throughout the entire period of the patch. Our objective is to use these patches in larger crowd simulations of people. We would like to create trajectories that could represent human motion. We focus on creating collision free motion since obvious collisions in simulations greatly reduces the realism of the animation.
 
 
 
@@ -210,19 +210,19 @@ We are given a set of trajectories within a patch consisting of both movable and
 
 Given two trajectories you can find the distance between them at any moment in time. The shortest distance between trajectories is the minimum of all these distances computed over the period of the patch. To compute the minimum distance between two trajectories we find the minimum distance between all the segments of the trajectories and take the minimum of the minimums as our final answer. When looking at two segments we find the intersection of the time intervals. If the intersection is not empty, we find the minimum distance. We call the start and end time of this intersection $t_0$ and $t_1$ respectively.
 
-Each one of those segments represent a moving agent with an initial position $p_0$ and $p_1$ with velocities $v_0$ and $v_1$ moving in the time interval $[t_0,t_1]$. 
+Each one of those segments represent a moving agent with an initial position $\mathbf{p}_0$ and $\mathbf{p}_1$ with velocities $\mathbf{v}_0$ and $\mathbf{v}_1$ moving in the time interval $[t_0,t_1]$. 
 
 We can then define the distance at a certain time between the two segments with the following equation.
 
 \begin{equation}
-	d(t) = || (p_0+v_0*t) - (p_1+v_1*t) ||
+	d(t) = || (\mathbf{p}_0+\mathbf{v}_0*t) - (\mathbf{p}_1+\mathbf{v}_1*t) ||
 	\label{eqn:distance}
 \end{equation}
 
-For simplicity we say $w = p_0-p_1$ and $dv = v_0-v_1$, so then,
+For simplicity we say $ \mathbf{w} = \mathbf{p}_0-\mathbf{p}_1$ and $\mathbf{dv} = \mathbf{v}_0-\mathbf{v}_1$, so then,
 
 \begin{equation}
-	d(t) = || w + dv*t ||
+	d(t) = || \mathbf{w} + \mathbf{dv}*t ||
 	\label{eqn:distance_simple}
 \end{equation}
 
@@ -230,7 +230,7 @@ For simplicity we say $w = p_0-p_1$ and $dv = v_0-v_1$, so then,
 
 We are looking for the minimum so we solve for $t$ when when the derivative equals zero.
 \begin{equation}
-	t_c = (-w . dv) / || dv ||^2
+	t_c = (-\mathbf{w} \cdot \mathbf{dv}) / || \mathbf{dv} ||^2
 \end{equation}
 
 With $t_c$, the time at which the two line segments are closest we can easily calculate the position on each of those segments, and thus the distance between them. If the time is outside the bounds of the segment we check the endpoints of the line segment for collision.
@@ -257,8 +257,11 @@ With $t_c$, the time at which the two line segments are closest we can easily ca
 %%-------------------------------------------------------------------
 
 
-We compute a minimum distance between each pair of trajectories. We store each value in a minimum distance matrix $M$. The position in the matrix corresponds to the trajectory ID. So the value at $M(a, b)$ would be the minimum distance from trajectory $a$ to trajectory $b$. Itís good to note that this value will be the same as $M(b,a)$. Furthermore $M(x,x)$ will always be zero. These facts can be used to reduce computation while filling out the minimum distance matrix.
+
+
+We compute a minimum distance between each pair of trajectories. We store each value in a minimum distance matrix $M$. The position in the matrix corresponds to the trajectory ID. So the value at $M(\tau_i, \tau_j)$ would be the minimum distance from trajectory $\tau_i$ to trajectory $\tau_j$. It”≥ good to note that this value will be the same as $M(\tau_j,\tau_i)$. Furthermore $M(\tau_i,\tau_i)$ will always be zero. These facts can be used to reduce computation while filling out the minimum distance matrix.
 \panayiotis{Do we have an image for this distance matrix?}
+\memo{Actual image? Or a table? I can do that anyways, as soon as I figure out how to create a nxn table in latex}
 
 Our algorithm (see Algorithm~\ref{algo:control-points}) creates collision free trajectories by adding and modifying control points. We can guarantee this by looking at the minimum distance matrix. If every value in the matrix is above some threshold then we know that for the entire period of the patch no two agents come closer than that threshold. So if we make that threshold equal to the sum of the radii being compared, those agents will never touch.
 
@@ -282,40 +285,39 @@ update minimum distance matrix\\
 %%-------------------------------------------------------------------
 
 
-We begin by computing the minimum distance matrix. Then while collisions still exist we find the smallest value in the minimum distance matrix. From that we find the corresponding trajectories and a point of closest approach for each trajectory. We then find an updated position for each of these points.
+We begin by computing the minimum distance matrix. Then while collisions still exist we find the smallest value in the minimum distance matrix. From that we find the corresponding trajectories and a point of closest approach for each trajectory $\mathbf{p}_1$ and $\mathbf{p}_2$. We then find an updated position for each of these points.
 
-To find the the updated position of a new point we add a correction force $\mathbf{F}_c$ to its current position $\mathbf{P}_1^{old}$.
+To find the the updated position of a new point we add a correction force $\mathbf{F}_c$ to its current position $\mathbf{p}_1^{old}$.
 
 
 \begin{equation}
-	\mathbf{P}_1^{new} = \mathbf{P}_1^{old} + \mathbf{F}_c
+	\mathbf{p}_1^{new} = \mathbf{p}_1^{old} + \mathbf{F}_{c_1}
 \end{equation}
 
 \panayiotis{Why $P_1$ and not just $\mathbf{p}$? Clarify p1 and p2}
 
 \panayiotis{assign symbols for all forces and position mentioned to make the equations more compact\ldots}
 
-The correction force is found based on the radius of the two agents, the position of the closest point, a constant weight to help reduce speed artifacts and prevent agents from leaving the bounds the patch, and a small random noise rotation to help prevent infinite loops.
+The correction force $\mathbf{F}_c$ for each point is found based on: the radius of the two agents, $r_1$ and $r_2$, which define a threshold $e=r_1+r_2$; a constant weight to help reduce speed artifacts and prevent agents from leaving the bounds the patch $w_1$ and $w_2$, each of them depending on the values of speeds $u_1$ and $u_2$; and a small random noise rotation matrix $R$ to help prevent infinite loops, the angle of rotation is chosen between $-.5$ and $.5$ radians.
 
 \begin{equation}
-	Correction Force on P1 = Rotation Matrix * \widehat{(\mathbf{p}_1 - \mathbf{p}_2)}* threshold * weightOfP1
+	 \mathbf{F}_{c_1}= R  \widehat{(\mathbf{p}_1 - \mathbf{p}_2)}* e * w_1
 \end{equation}
+\memo{Do we need the wide hat?}
 
-NOTE: threshold = radius1 + radius2. In our implementation $r_1 == r_2$ so we just had a constant threshold
-
-Rotation Matrix rotation of plus or minus some small angle. $0.5$ radians $\approx28.65^{o}$.
+NOTE: In our implementation $r_1 = r_2$, making the threshold constant.
 
 \panayiotis{SHORTEN THE TEXT IN THE EQUATIONS!!}
 \begin{equation}
-weightOfP1 = \left\{
+w_1 = \left\{
 	\begin{array}{l l}
-		speed_2 / (speed_1 + speed_2)	&	\quad \text{if the point wonít go outside the patch}\\
-		0								&	\quad \text{if the force would result in the point going outside the patch}
+		u_2 / (u_1 + u_2)	&	\quad \text{if the point won”¥ go outside the patch.}\\
+		0								&	\quad \text{otherwise}
 	\end{array}
 	\right.
 \end{equation}
 
-The calculations for $P_2$ are symmetric. Once we have this new point for the trajectory we check to see if there is already a control point within a small time interval of the new point. If there is we move that control point to this new position in space and time. Otherwise we add a control 
+The calculations for $\mathbf{p}_2$ are symmetric. Once we have this new point for the trajectory we check to see if there is already a control point within a small time interval of the new point. If there is we move that control point to this new position in space and time. Otherwise we add a control 
 point in the trajectory at this new position. Finally we update the minimum distance matrix. We do not need to recheck all the distances in the matrix, only the ones that interact with the trajectory we have modified.
 
 We find that in many situations this algorithm converges quickly and produces collision free trajectories. However there are still situations where it converges slowly or even gets stuck in an infinite loop.
@@ -323,7 +325,7 @@ We find that in many situations this algorithm converges quickly and produces co
 \subsection{Smoothing}
 
 Smoothing:
-We have obtained some collision free trajectories, but they may have a jerky trajectory, so we need a final the step to smooth them. We need to take special care of how we do this, we donít want the trajectories to change in such a way that they make new collisions. A simple approach is to use cubic splines. Cubic splines connects every pair of points in a trajectory with a polynomial function of degree $3$:
+We have obtained some collision free trajectories, but they may have a jerky trajectory, so we need a final the step to smooth them. We need to take special care of how we do this, we don”¥ want the trajectories to change in such a way that they make new collisions. A simple approach is to use cubic splines. Cubic splines connects every pair of points in a trajectory with a polynomial function of degree $3$:
 
 \begin{equation}
  S(x)=a+bx+ cx^2+ dx^3
@@ -331,9 +333,9 @@ We have obtained some collision free trajectories, but they may have a jerky tra
 
 In total, we will need to find the coefficients a, b, c, and d for every segment we have in our trajectory. Those coefficients are determined by continuity $C^1$ restrictions: 
 
-For every spline associated with a trajectory between point $p1=(x_1,y_1,t_1)$ and $p_2=(x_2,y_2,t_2)$, the spline must pass through those same points, that is, $S(t_1)=(x_1,y_1)$ and $S(t_2)=(x_2,y_2)$.
+For every spline associated with a trajectory between control point $\mathbf{cp}_1=(\mathbf{p}_1,t_1)$ and $\mathbf{cp}_2=(\mathbf{p}_2,t_2)$, the spline must pass through those same points, that is, $S(t_1)=(\mathbf{p}_1)$ and $S(t_2)=(\mathbf{p}_2)$.
 
-For every two contiguous splines $S_1$ and $S_2$, for the common point they share p, the velocity must be equivalent, that is,  $S_1í(p)=S_2í(p)$.
+For every two contiguous splines $S_1$ and $S_2$, for the common point they share p, the velocity must be equivalent, that is,  $S'_1(\mathbf{p})=S'_2“®\mathbf{p})$.
   
 This restrictions can be accommodated in a such way that they form a system of linear equations that can be solved using Cholesky decomposition.
 
@@ -341,18 +343,10 @@ We can not apply directly this method using our current control points. That res
 
 After that, we compute the coefficients to create the splines and resample along the spline to get new control points. The new trajectory will still be composed of line segments, but since they are smaller, and following closely the path of a cubic function, to the naked eye they will look like curves. The finer the sample, the more it will look like a smooth path.
 
-For optimization purposes, we choose a different sampling method. The trajectories are relatively straight in the middle of the the segments and have higher curvature near control points. For that reason, we take more samples around inflexion points (old control points) than far from them. These samples become the new control points that define the trajectory.
+For optimization purposes, the second sampling is not taken uniformly. The trajectories are relatively straight in the middle of the the segments and have higher curvature near control points. For that reason, we take more samples around inflexion points (old control points) than far from them. These samples become the new control points that define the trajectory.
 
-There may be cases, even with a healthy number of tacks, that the splines still vary too much from the original trajectory. We define a threshold based on the same threshold of collision to know how far a way a point can be moved. For these cases where the new control point surpasses the threshold, we simply donít add it to the set of new control points.  There may be extreme cases (for example, due to too a bad sampling of the tacks at the beginning), where the spline has extreme curves that are very different from our initial trajectory. In those extreme cases most of the new control points would not be added and the new smooth trajectory would end up being very similar to the original one.
+There may be cases, even with a healthy number of tacks, that the splines still vary too much from the original trajectory. We define a threshold based on the same threshold of collision to know how far a way a point can be moved. For these cases where the new control point surpasses the threshold, we simply don”¥ add it to the set of new control points.  There may be extreme cases (for example, due to too a bad sampling of the tacks at the beginning), where the spline has extreme curves that are very different from our initial trajectory. In those extreme cases most of the new control points would not be added and the new smooth trajectory would end up being very similar to the original one.
 
-
-
-
-Maybe next paragraph goes better in discussion?
-Having splines for trajectories is better than having simple straight lines, but we know humans donít  follow either of them when walking,  so other methods can be tried to improve this initial approach.
-
- - input : piecewiselinear trajectories. output : a certain kind of splines. Objective: remove sharp changes in speed and orientation
- 
- - should be short. 
+Having splines for trajectories is better than having simple straight lines, but we know humans don”¥  follow either of them when walking,  so other methods can be tried to improve this initial approach.
 
 
