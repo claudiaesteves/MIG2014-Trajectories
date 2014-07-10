@@ -120,7 +120,26 @@ This pseudocode demonstrates the Gale-Shapley algorithm in relation to two equal
 %% The Stable Matching Algorithm by Gale-Shapley
 %%-------------------------------------------------------------------
 \begin{algorithm}[t]
-Put here the algorith of stablematching
+
+Initialize all $m \in M$ and $w \in W$ to \textit{free} \;
+\While {$ \mathbf{\exists}$ \textit{free} man $m$ who still has a woman $w$ to propose to} {
+	$w \leftarrow m's$ highest ranked woman to whom he has not yet proposed \;
+	\eIf {$w$ is \textit{free}}
+	{ 
+		$(m,w)$ become engaged \;
+	}
+	{
+		some pair $(m',w)$ already exists \;
+		\eIf {$w$ prefers $m$ to $m'$} 
+		{
+			$(m,w)$ become engaged \;
+			$m'$ becomes \textit{free} \;
+		}
+		{
+			 $(m',w)$ remain engaged;
+		}
+	}
+}
 \caption{Stable Matching Algorithm}
 \label{alg:stable-matching}
 \end{algorithm}
@@ -138,7 +157,7 @@ All we need in order to use this algorithm is a to generate preferences for entr
 \end{enumerate}
 \panayiotis{The steps above need editing}    
  
-We will have a list similar to this for each entry and exit point, we call this list the proposal list (see Table~\ref{tab:proposal-list}).
+We will have a list similar to this for each entry and exit point, we call this list the proposal list (see Table ~\ref{tab:proposal-list}).
 
 %%-------------------------------------------------------------------
 %% The Proposal List table
@@ -259,7 +278,28 @@ With $t_c$, the time at which the two line segments are closest we can easily ca
 
 
 
-We compute a minimum distance between each pair of trajectories. We store each value in a minimum distance matrix $M$. The position in the matrix corresponds to the trajectory ID. So the value at $M(\tau_i, \tau_j)$ would be the minimum distance from trajectory $\tau_i$ to trajectory $\tau_j$. Itӳ good to note that this value will be the same as $M(\tau_j,\tau_i)$. Furthermore $M(\tau_i,\tau_i)$ will always be zero. These facts can be used to reduce computation while filling out the minimum distance matrix.
+We compute a minimum distance between each pair of trajectories. We store each value in a minimum distance matrix $M$. The position in the matrix corresponds to the trajectory ID. So the value at $M(i, j)$ would be the minimum distance from trajectory $\tau_i$ to trajectory $\tau_j$. It's good to note that this value will be the same as $M(j,i)$. Furthermore $M(i,i)$ will always be zero and distance for trajectories that don't intersect in time, we set them to a number bigger than the threshold for collisions, for example $100$ for a threshold of $1$ (see Table ~\ref{tab:minimum-distances}). These facts can be used to reduce computation while filling out the minimum distance matrix.
+
+%%-------------------------------------------------------------------
+%% The Minimum Distances Table
+%%-------------------------------------------------------------------
+\begin{table}[b]
+
+	\caption{Minimum Distances}
+	\begin{tabular}{|c||c|c|c|}
+		\hline
+		 & $\tau_0$	& $\tau_1$ & $\tau_2$\\ \hline \hline
+		$\tau_0$	& $0$		&	$100$ & $8.31$\\  \hline
+		$\tau_1$	& $100$		&	$0$ & $0.14$\\  \hline
+		$\tau_2$	& $8.31$		&	$0.14$ & $0$\\
+		\hline
+		\end{tabular}
+\label{tab:minimum-distances}
+\end{table}
+%%-------------------------------------------------------------------
+%% The Proposal List table
+%%-------------------------------------------------------------------
+
 \panayiotis{Do we have an image for this distance matrix?}
 \memo{Actual image? Or a table? I can do that anyways, as soon as I figure out how to create a nxn table in latex}
 
@@ -271,12 +311,14 @@ Our algorithm (see Algorithm~\ref{algo:control-points}) creates collision free t
 %% Control Points algorithm
 %%-------------------------------------------------------------------
 \begin{algorithm}[t]
-pseudo-code\\
-compute minimum distance matrix\\
-while(there exists at least one distance less than its threshold):\\
-    find smallest value in that matrix, look at the two trajectories that correspond to that value\\
-update both trajectories to either move or add a control point\\
-update minimum distance matrix\\
+Compute minimum distance matrix $M$\;
+\While{there exists at least one entry in $M$ below the threshold}{
+	Find indices $i$  and $j$ for which $M(i,j)$ has the smallest value $d$\;
+	Find temporal control points $\mathbf{cp}_i$ and $\mathbf{cp}_j$ in $\tau_i$ and $\tau_j$ that are at distance $d$ \;
+	Apply repulsion forces to $\mathbf{cp}_i$ and $\mathbf{cp}_j$\;
+	Update  $\tau_i$ and $\tau_j$\;
+	Update $M$ \;
+	}
 \caption{The control points generation algorithm}
 \label{algo:control-points}
 \end{algorithm}
@@ -311,7 +353,7 @@ NOTE: In our implementation $r_1 = r_2$, making the threshold constant.
 \begin{equation}
 w_1 = \left\{
 	\begin{array}{l l}
-		u_2 / (u_1 + u_2)	&	\quad \text{if the point wonӴ go outside the patch.}\\
+		u_2 / (u_1 + u_2)	&	\quad \text{if the point won't go outside the patch.}\\
 		0								&	\quad \text{otherwise}
 	\end{array}
 	\right.
