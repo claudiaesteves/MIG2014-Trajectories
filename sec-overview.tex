@@ -120,7 +120,26 @@ This pseudocode demonstrates the Gale-Shapley algorithm in relation to two equal
 %% The Stable Matching Algorithm by Gale-Shapley
 %%-------------------------------------------------------------------
 \begin{algorithm}[t]
-Put here the algorith of stablematching
+
+Initialize all $m \in M$ and $w \in W$ to \textit{free} \;
+\While {$ \mathbf{\exists}$ \textit{free} man $m$ who still has a woman $w$ to propose to} {
+	$w \leftarrow m's$ highest ranked woman to whom he has not yet proposed \;
+	\eIf {$w$ is \textit{free}}
+	{ 
+		$(m,w)$ become engaged \;
+	}
+	{
+		some pair $(m',w)$ already exists \;
+		\eIf {$w$ prefers $m$ to $m'$} 
+		{
+			$(m,w)$ become engaged \;
+			$m'$ becomes \textit{free} \;
+		}
+		{
+			 $(m',w)$ remain engaged;
+		}
+	}
+}
 \caption{Stable Matching Algorithm}
 \label{alg:stable-matching}
 \end{algorithm}
