@@ -6,7 +6,7 @@
 %%----------------------------------------------------------------
 \begin{figure*}[t]
 	\begin{center}
-	\includegraphics[width=0.9\linewidth]{./images/overview-hd-old.png}
+	\includegraphics[width=0.9\linewidth]{./images/overview-hd.png}
 % 	\includegraphics[height=4cm]{./images/patches-empty-patch-with-pattern.png}
 % 	\includegraphics[height=4cm]{./images/patches-connected-patch.png}
 % 	\includegraphics[height=4cm]{./images/patches-collision-free-patch.png}
@@ -40,7 +40,7 @@ Please refer to Figure~\ref{fig:definitions} for a visual representation of the 
 %%----------------------------------------------------------------
 \begin{figure}
 \begin{center}
-	\includegraphics[width=0.9\linewidth]{./images/patch-definitions.png}
+	\includegraphics[width=0.9\linewidth]{./images/patch-definitions-arrows.png}
 	\caption{
 		\textbf{Patches and Patterns} A \emph{patch} is defined by the geometrical area $A$ where a set of dynamic and static objects ($D$ and $S$ respectively) can move over a period of time $\pi$. \emph{Patterns} define boundary conditions for the patches and act as portals connecting neighboring patches. 
 	}
@@ -191,16 +191,25 @@ A more detailed look on all three steps is given over the remainder of this sect
 \subsection{Connecting Boundary Control Points}
 \label{sec:method:init}
 
-The first step to this algorithm is to match all the entry and exit points.  To do this, we have to measure how good or bad a match is. Intuitively, there are some better matches than others, Judging by sight, trajectories passing near the center of the patch look better that the ones staying close to the borders. We can consider some other aspects too, like how close the speed needed for the agent to go from the Entry Point to the Exit Point is to comfort speed. We use a comfort speed $u_{cft}$ of $1.33~m/s$ which is the normal walking speed of humans in an unconstrained environment.
+The first step to the proposed algorithm is to match all the entry and exit points in an optimal way.
+To do this, a measure of the match's quality has to be defined.
+%we have to measure how good or bad a match is.
+Intuitively, there are some matches that are better than others; e.g., judging by observation, trajectories passing near the center of the patch look better that the ones staying close to the borders forcing in essence the characters to cover more space.
+Some other aspects can also be considered, such as how close the speed needed by an agent to travel from an Entry to an Exit Point is compared to typical walking comfort speeds of humans.
+A comfort speed of $u_{cft} = 1.33~m/s$, which is the normal walking speed of humans in an unconstrained environment is used in this work \cite{Whittle2003Gait}.
 
-For a square patch, we prefer to match points with points on the opposite pattern. Then the points on the contiguous pattern and finally, the points that are in the same pattern. If there are multiple options on the same pattern we choose the point whose associated trajectory is closest to comfort speed.
+For a square patch, we define an order of preference between matching; first we prefer to match points between opposing patterns, followed by neighboring ones and finally with points on the pattern itself.
+%Then the points on the contiguous pattern and finally, the points that are in the same pattern.
+For any of these cases, if there exist multiple possible matching options on the same pattern, the point whose associated trajectory is closest to the defined comfort speed is selected.
 
-To solve this matching problem, we make use of the Gale-Shapley algorithm~\cite{gale1962college} (see Algorithm~\ref{alg:stable-matching}), commonly referred to as the algorithm to solve the stable marriage problem.  This algorithm assures that at the end, if we have Alice engaged to Bob and Carol engaged to Dave, it is not possible for Alice to prefer Dave and Dave to prefer Alice. We call that a stable matching.  
+To solve this matching problem, we employ the \emph{Gale-Shapley algorithm}~\cite{gale1962college} (see Algorithm~\ref{alg:stable-matching}), commonly referred to as the algorithm to solve the \emph{stable marriage problem}. 
+This algorithm assures that at the end, if we have Alice engaged to Bob and Carol engaged to Dave, it is not possible for Alice to prefer Dave and Dave to prefer Alice -- this is called a \emph{stable match}.  
 
-This pseudocode demonstrates the Gale-Shapley algorithm in relation to two equal lists of men and women who are being matched for marriage. However the algorithm generalizes to any matchable objects, which in our case is entry and exit points.
+Algorithm~\ref{alg:stable-matching} demonstrates the Gale-Shapley algorithm in relation to two equal lists of men and women who are being matched for marriage.
+However the algorithm generalizes to any matchable objects, which in our case are entry and exit points.
 
 %%-------------------------------------------------------------------
-%% The Stable Matching Algorithm by Gale-Shapley
+%% The Stable Marriage Algorithm by Gale-Shapley
 %%-------------------------------------------------------------------
 \begin{algorithm}[t]
 
@@ -223,43 +232,66 @@ Initialize all $m \in M$ and $w \in W$ to \textit{free} \;
 		}
 	}
 }
-\caption{Stable Matching Algorithm}
+\caption{Gale-Shapley Stable Marriage Algorithm from \cite{Gusfield1989SMP}.}
 \label{alg:stable-matching}
 \end{algorithm}
 %%-------------------------------------------------------------------
-%% The Stable Matching Algorithm by Gale-Shapley
+%% The Stable Marriage Algorithm by Gale-Shapley
 %%-------------------------------------------------------------------
 
 
-All we need in order to use this algorithm is a to generate preferences for entry and exit points. We do this with the following steps:
+% All that is needed to use this algorithm is to generate preference values for entry and exit points.
+% For each of the entry Entry points, the following steps are appliedThis is done using the following steps:
+In order to apply Algorithm~\ref{alg:stable-matching}, preference values for all combinations of entry and exit points should be defined.
+To do so, each entry point keeps a \emph{proposal list} $\mathbf{L}_s$ indicating order of preference for matching (Figure~\ref{tab:proposal-list}).
+The following approach is employed to rank each possible matching:
 \begin{enumerate}
-  \item Find the speed it would take to travel from an Entry Point to an Exit Point.  Letӳ assume $(\mathbf{p}_1, t_1)$ is position and time of the Entry Point and $(\mathbf{p}_2,t_2)$ the equivalent of the Exit point. Speed $u$ is $d/t$ where $d=|\mathbf{p}_1-\mathbf{p}_2|$ and $t=t_2-t_1$ in case $t_2>t_1$. Otherwise, $t=period+t_2-t_1$. More details on why we take this time will be given later when we create the initial set of trajectories.
-  \item Now, we assign each pair of points a number between $0$ and $\pi/2$, where $0$ represents maximum closeness to comfort speed with $arctan(|u_{cft} -u|)$.
-  \item We add penalties for points being in the same patch, for those points, we add $4$. For points lying in the contiguous pattern we also add a smaller penalty, $2$.
-  \item We sort each list.
+  \item Find the speed it would take to travel from an entry point to all exit points.
+  Assuming that $(\mathbf{p}_1, t_1)$ and $(\mathbf{p}_2,t_2)$ are position and time of the entry and exit points respectively
+  speed is defined as $u = s / {\Delta}t$ where $s=|\mathbf{p}_2-\mathbf{p}_1|$ and ${\Delta}t = t_2 - t_1$ in case
+  of $t_2 > t_1$, otherwise ${\Delta}t=\pi + t_2 - t_1$.
+  \footnote{More details on why this this last assumption is made will be presented later during the creation of the initial set of trajectories.}
+  \item %Next, each pair of points is assigned a number between $0$ and $\pi/2$, with $0$ indicating maximum closeness to comfort speed with $arctan(|u_{cft} -u|)$.
+  Next, each pair of points is assigned a preference value:
+  \begin{equation}
+  	pr_{score} = u_{match} + p
+  	\label{eqn:objective_function}
+  \end{equation}
+  where
+  		$u_{match} = arctan(|u_{cft} - u|) \in [0, \pi / 2)$ indicates match to desired speed with $0$ indicating maximum closeness and 
+    	$p = \{0, 2, 4\}$ is a \emph{penalty} value that depends on where the two points lie; for points on opposing patterns there is no penalty, for neighboring patches it is $2$ and for points on the same pattern it is $4$ (this can be generalized to any prism like patch). 
+
+  % and We add penalties for points being in the same patch, for those points, we add $4$. For points lying in the contiguous pattern we also add a smaller penalty, $2$.
+  \item Sort $\mathbf{L}_s$ in ascending order; the first entry indicates the most desired exit point.
 \end{enumerate}
-\panayiotis{The steps above need editing}    
  
-We will have a list similar to this for each entry and exit point, we call this list the proposal list (see Table ~\ref{tab:proposal-list}).
 
 %%-------------------------------------------------------------------
 %% The Proposal List table
 %%-------------------------------------------------------------------
 \begin{table}[b]
 	\centering
-	\caption{Proposal List}
-	\begin{tabular}{|c|c|}
-		\multicolumn{2}{c}{Rankings of preferred}\\
-		\multicolumn{2}{c}{partners for Entry Point A}\\
+	\caption{
+	\textbf{Proposal List} Each entry point keeps a list of preference scores for all possible Exit points.
+	Lower values indicate bigger preference, with exit point B in this case being the most preferred one.
+	Exit Points F and D lie in the same pattern as Entry Point $1$, so they receive a higher number.
+	}
+	\begin{tabular}{c|c}
+% 		\multicolumn{2}{c}{Rankings of preferred}\\
+% 		\multicolumn{2}{c}{partners for Entry Point A}\\
 		\hline
-		Preference	& Exit Point\\
-		\hline\hline
-		$0.34$		&	B\\
-		$1.3$		&	C\\
-		$2.3$		&	A\\
-		$2.4$		&	E\\
-		$4.5$		&	D\\
-		$4.6$		&	F\\
+		\multicolumn{2}{c}{Entry Point: $1$}	\\
+ 		\hline
+ 		\hline
+		Exit Point	&	Preference\\
+		\hline
+% 		\hline
+		B	&	$\mathbf{0.34}$	\\
+		C	&	$1.3$			\\
+		A	&	$2.3$			\\
+		E	&	$2.4$			\\
+		D	&	$4.5$			\\
+		F	&	$4.6$			\\
 		\hline
 		\end{tabular}
 	\label{tab:proposal-list}
@@ -268,38 +300,52 @@ We will have a list similar to this for each entry and exit point, we call this 
 %% The Proposal List table
 %%-------------------------------------------------------------------
 
+It is emphasized here, that each entry point keeps its own proposal list.
+After each entry point has been assigned a proposal list, Algorithm~\ref{alg:stable-matching} is used to define matches between the entry and exit points;
+every two points that remained engaged at the end of the algorithm become a pair.
 
-Exit Points F and D lie in the same pattern as Entry Point A, so they receive a higher number.
-After this, we use the stable matching algorithm mentioned above.
+The final step is creating the initial batch of trajectories.
+Firstly, the paired points are connect with straight lines;
+% We start by trying to connect the points with a straight line.
+if a line tries to connect two points backwards in time (that is if $t_2 < t_1$), the initial trajectory is split into two parts -- from $t_1$ to $\pi$ and from $0$ to $t_2$; similarly to approach followed by \cite{Yersin:2009}.
+% We do something special when a line tries to travel backwards in time, i.e. $t_2<t_1$.
+% For these cases we split the initial trajectory in two.
+% One going from $t_1$ to period $\pi$, another one going from $0$ to $t_2$.
+The positions of these new control points are in the same straight line, taken in such a way that the speed is the same in both segments.
+The same approach is used if the trajectory enforces unrealistically high speed values ($u \gg u_{cft}$).
 
-Every two points that remained engaged at the end of the algorithm become a pair.
-The last step is to create the initial batch of trajectories. We start by trying to connect the points with a straight line. We do something special when a line tries to travel backwards in time, i.e. $t_2<t_1$. For these cases we split the initial trajectory in two. One going from $t_1$ to period $\pi$, another one going from $0$ to $t_2$.  The positions of these new control points are in the same straight line, taken in such a way that the speed is the same going from $t_1$ to $\pi$ and from $0$ to $t_2$. We use the same method if the trajectory is moving at unrealistically fast speeds.
+Further adjustments to the initial trajectories are done for some special cases.
+For agents traveling only over an edge, a control point is added near the center of the patch.
+For agents moving slowly a control point with the same position but on a different time is added, resulting in agents that stop suddenly (as if pausing to look around) but later on continuing their journey at a better speed.
 
-We make further adjustments in the initial trajectory in some special cases. For agents traveling only over the edge, we add a control point near the center of the patch. For agents moving slowly we add a control point with same position, but different time, thus making the agent do a full stop (as if pausing to look around), after a few moments it continues its journey with a better speed.
-
-\devin{The output of this function is a set of trajectories. Collisions are probably still present in the trajectories at this point.}
+% \devin{The output of this function is a set of trajectories. Collisions are probably still present in the trajectories at this point.}
  
+ To conclude, this step results in linear trajectories that are optimized for speed and coverage of space using an objective function (Equation~\ref{eqn:objective_function}).
+ These trajectories though can result in collisions, since no special care was taken to handle that.
+ To do so, an iterative approach has been proposed.
 
-\note{
-- INPUT OUTPUT objective
+% \note{
+% - INPUT OUTPUT objective
+% 
+% - when you connect two boundary conditions, you connect two spation temporal waypoints. This means that you determine this way where characters enter, where they exit patches and the speed between waypoints. 
+% 
+% - we can define what is a ԧoodԠconnection: avoid half turn, avoid extreme speeds. 
+% 
+% - we define an objective function, we solve this using the stable marriage problem. 
+% 
+% - reminder of 2009 paper - you explain the specific case of splitting trajectories. 
+% 
+% -  you provide pseudo algo for this,  
+% 
+%  - you define all the variables/parameters you use. 
+%  
+% summarize what you get as an aoutput, and what is the next step.
+% }
+% 
 
-- when you connect two boundary conditions, you connect two spation temporal waypoints. This means that you determine this way where characters enter, where they exit patches and the speed between waypoints. 
-
-- we can define what is a ԧoodԠconnection: avoid half turn, avoid extreme speeds. 
-
-- we define an objective function, we solve this using the stable marriage problem. 
-
-- reminder of 2009 paper - you explain the specific case of splitting trajectories. 
-
--  you provide pseudo algo for this,  
-
- - you define all the variables/parameters you use. 
- 
-summarize what you get as an aoutput, and what is the next step.
-}
-
-
-
+%%===============================================================
+%% Subsection: Removing Collisions
+%%===============================================================
 \subsection{Removing Collisions}
 \label{sec:method:remove-collisions}
 
