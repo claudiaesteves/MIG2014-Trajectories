@@ -12,7 +12,7 @@
 % 	\includegraphics[height=4cm]{./images/patches-collision-free-patch.png}
 % 	\includegraphics[height=4cm]{./images/patches-smoothed-patch.png}
 	\caption{
-		\textbf{Overview} Input and output points in a patch's patterns are initially connected and subsequently modified and smoothed out to be collision free.
+		\textbf{Overview} Input and output points in a patch's patterns are initially connected and subsequently modified using the proposed optimization approach and smoothed out to be collision free.
 	}
 	\label{fig:overview}
 	\end{center}
@@ -23,8 +23,17 @@
 
 \note{Overview: remind definitions on crowd patches: patch, pattern, spatiotemporal waypoints (boundary conditions: input, output, initial states // boundary conditions should be strictly enforced. Movable control points), period of time \dots}
 
+In this section we present the proposed methodology for generating trajectories for patches.
+We first give some definitions and notations (Section~\ref{sec:method:definitions}), followed by an overview of the method (Section~\ref{sec:method:overview}), and trajectories initial generation, collision handling and smoothing out (Sections~\ref{sec:method:init}--\ref{sec:method:smoothing}).
+
+
 \note{Starting Definitions:}
 \subsection{Definitions}
+\label{sec:method:definitions}
+
+Before presenting our approach on trajectory generation for Crowd Patches, we present some definitions regarding Crowd Patches as presented by Yersin \etal~\cite{Yersin:2009}.
+ 
+ 
 \begin{description}
 
 \item[Patch]{
@@ -80,7 +89,7 @@ A patch defines a set of Patterns, and conversely, a set of patterns satisfying 
 \end{description}
 
 \subsection{Overview}
-\label{method:overview}
+\label{sec:method:overview}
 
 The objective is, given a set of patterns, we want to construct a patch.
 This process has three main steps:
@@ -107,6 +116,7 @@ OUTPUT : initial trajectories (piecewise linear trajs, possibly colliding, with 
 
 
 \subsection{Connecting Boundary Control Points}
+\label{sec:method:init}
 
 The first step to this algorithm is to match all the entry and exit points.  To do this, we have to measure how good or bad a match is. Intuitively, there are some better matches than others, Judging by sight, trajectories passing near the center of the patch look better that the ones staying close to the borders. We can consider some other aspects too, like how close the speed needed for the agent to go from the Entry Point to the Exit Point is to comfort speed. We use a comfort speed $u_{cft}$ of $1.33~m/s$ which is the normal walking speed of humans in an unconstrained environment.
 
@@ -366,6 +376,7 @@ point in the trajectory at this new position. Finally we update the minimum dist
 We find that in many situations this algorithm converges quickly and produces collision free trajectories. However there are still situations where it converges slowly or even gets stuck in an infinite loop.
 
 \subsection{Smoothing}
+\label{sec:method:smoothing}
 
 Smoothing:
 We have obtained some collision free trajectories, but they may have a jerky trajectory, so we need a final the step to smooth them. We need to take special care of how we do this, we donӴ want the trajectories to change in such a way that they make new collisions. A simple approach is to use cubic splines. Cubic splines connects every pair of points in a trajectory with a polynomial function of degree $3$:
