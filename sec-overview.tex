@@ -472,6 +472,27 @@ After that, we compute the coefficients to create the splines and resample along
 
 For optimization purposes, the second sampling is not taken uniformly. The trajectories are relatively straight in the middle of the the segments and have higher curvature near control points. For that reason, we take more samples around inflexion points (old control points) than far from them. These samples become the new control points that define the trajectory.
 
+%%-------------------------------------------------------------------
+%% Removing collisions figure
+%%-------------------------------------------------------------------
+\begin{figure}[t]
+	\begin{center}
+	\includegraphics[width=0.48\linewidth]{./images/Smooth1.png}
+	\includegraphics[width=0.48\linewidth]{./images/Smooth2.png}\\
+	\includegraphics[width=0.48\linewidth]{./images/Smooth3.png}
+	\includegraphics[width=0.48\linewidth]{./images/Smooth4.png}
+	\caption{
+		\textbf{\textbf{Smoothing Proccess}}
+	}
+	\label{fig:smoothing}
+	\end{center}
+\end{figure}
+%%-------------------------------------------------------------------
+%% Removing collisions figure
+%%-------------------------------------------------------------------
+
+
+
 There may be cases, even with a healthy number of tacks, that the splines still vary too much from the original trajectory. We define a threshold based on the same threshold of collision to know how far a way a point can be moved. For these cases where the new control point surpasses the threshold, we simply donӴ add it to the set of new control points.  There may be extreme cases (for example, due to too a bad sampling of the tacks at the beginning), where the spline has extreme curves that are very different from our initial trajectory. In those extreme cases most of the new control points would not be added and the new smooth trajectory would end up being very similar to the original one.
 
 Having splines for trajectories is better than having simple straight lines, but we know humans donӴ  follow either of them when walking,  so other methods can be tried to improve this initial approach.
