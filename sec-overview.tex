@@ -21,7 +21,7 @@
 %% Overview Figure
 %%----------------------------------------------------------------
 
-\note{Overview: remind definitions on crowd patches: patch, pattern, spatiotemporal waypoints (boundary conditions: input, output, initial states // boundary conditions should be strictly enforced. Movable control points), period of time \dots}
+%\note{Overview: remind definitions on crowd patches: patch, pattern, spatiotemporal waypoints (boundary conditions: input, output, initial states // boundary conditions should be strictly enforced. Movable control points), period of time \dots}
 
 In this section we present the proposed methodology for generating trajectories for patches.
 We first give some definitions and notations (Section~\ref{sec:method:definitions}), followed by an overview of the method (Section~\ref{sec:method:overview}), and trajectories initial generation, collision handling and smoothing out (Sections~\ref{sec:method:init}--\ref{sec:method:smoothing}).
@@ -31,25 +31,41 @@ We first give some definitions and notations (Section~\ref{sec:method:definition
 \subsection{Definitions}
 \label{sec:method:definitions}
 
-Before presenting our approach on trajectory generation for Crowd Patches, we present some definitions regarding Crowd Patches as presented by Yersin \etal~\cite{Yersin:2009}.
- 
- 
-\begin{description}
+Before presenting our approach on trajectory generation for Crowd Patches, we present some definitions and notations regarding Crowd Patches as presented by Yersin \etal~\cite{Yersin:2009}.
+Please refer to Figure~\ref{fig:definitions} for a visual representation of the definitions.
 
-\item[Patch]{
-A patch is a set $\{ A, \pi, D, S\}$ where $A$ is a geometrical area with a convex polygonal shape, $\pi$ the period of time of the animation and $D$ and $S$ are the sets of dynamic and static objects, respectively.
+%%----------------------------------------------------------------
+%% Patch Definitions
+%%----------------------------------------------------------------
+\begin{figure}
+\begin{center}
+	\includegraphics[width=\linewidth]{./images/patch-definitions.png}
+	\caption{
+		\textbf{Patches and Patterns} A \emph{patch} is defined by the geometrical area $A$ where a set of dynamic and static objects ($D$ and $S$ respectively) can move over a period of time $\pi$. \emph{Patterns} define boundary conditions for the patches and act as portals connecting neighboring patches. 
+	}
+	\label{fig:definitions}
+	\end{center}
+\end{figure}
+%%----------------------------------------------------------------
+%% Patch Definitions
+%%----------------------------------------------------------------
+ 
+%\begin{description}
+
+%\item[Patch]{
+A \textbf{patch} is a set $\{ A, \pi, D, S\}$ where $A$ is a geometrical area with a convex polygonal shape, $\pi$ the period of time of the animation and $D$ and $S$ are the sets of dynamic and static objects, respectively.
 These last two sets may be empty in case of an empty patch.
-}
+%}
 
-\item[Static obstacles]{
-Static objects are simple obstacles whose geometry is fully contained inside the patch.
-}
+%\item[Static obstacles]{
+\textbf{Static objects} are simple obstacles whose geometry is fully contained inside the patch.
+%}
 
-\item[Dynamic objects]{
-Dynamic objects are animated; i.e., they are moving in time according to a set of trajectories $T$.
-}
+%\item[Dynamic objects]{
+\textbf{Dynamic objects} are animated; i.e., they are moving in time according to a set of trajectories $T$.
+%}
 
-\end{description}
+%\end{description}
 
 We define a {\bf trajectory} inside a patch as a function $\tau$ going from time to position, more specifically from a subset of $[ 0,\pi ]$ to $A$.
 
