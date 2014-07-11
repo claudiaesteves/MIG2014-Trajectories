@@ -116,9 +116,9 @@ Note that the second condition implicitly implies that in sequences with multipl
 A patch can be considered as a spatio-temporal right prism depending on the type of polygon used as its area (cube in the case of a squared area patch).
 A \textbf{pattern} can be defined as one lateral side of the prism (Figure~\ref{fig:definitions}).
 Specifically, it is a rectangle whose base is one of the edges of the polygonal area (we define $\mathbf{l} \in \mathbb{R}^2$ as this two dimensional vector), and its height is equal to the period $\pi$.
-In addition to these, patterns also include the sets $\mathbf{I}$ and $\mathbf{O}$ of input and output boundary control points respectively.
-The input set contains the boundary control points where exogenous agents begin their trajectories; we call these \emph{entry points}.
-Conversely the elements of output are called Exit Points; they establish the position in time and space that the exogenous agents finish their paths.
+In addition to these, patterns also include the sets $\mathbf{I}$ and $\mathbf{O}$ of Input and Output boundary control points respectively.
+The input set contains the boundary control points where exogenous agents begin their trajectories; we call these \emph{Entry Points}.
+Conversely the elements of output are called \emph{Exit Points}; they establish the position in time and space that the exogenous agents finish their paths.
 Formally defined, a pattern $\mathbf{P}^{(i)}$ is:
 
 \begin{equation}
@@ -143,7 +143,8 @@ When these patches are animated, this will be observed as moving agents going fr
 If the area $\mathbf{A}$ of a patch is a square then 4 patterns are defined, one per side.
 Patterns defined by a patch have the property that the sum of the cardinality of all the inputs is the same as the sum of the cardinality of all outputs; we call this the parity condition: $\sum(|inputs|)= \sum(|outputs|)$.
 
-A patch defines a set of patterns, and conversely, a set of patterns satisfying the parity condition, having the same period, and whose vectors define a convex polygonal area, can be used to create a patch indirectly.
+A patch defines a set of patterns, and conversely, a set of patterns that satisfies the parity condition;i.e. all patterns in the set have same period and whose vectors define a convex polygonal area, can be used to create a patch indirectly.
+
 %  }
 % 
 % \end{description}
@@ -154,29 +155,38 @@ A patch defines a set of patterns, and conversely, a set of patterns satisfying 
 \subsection{Overview}
 \label{sec:method:overview}
 
-The objective is, given a set of patterns, we want to construct a patch.
-This process has three main steps:
+The objective of the proposed work is to generate a patch given a set of patterns.
+This implies that given a set of constraints such as input and output spatio-temporal control points, a set of believable collision-free trajectories should be generated that interconnect all of them.
+This process has three main steps (Figure~\ref{fig:overview}):
 \begin{enumerate}
-  \item Make a matching between the elements in the Input and Output sets contained within a patch. In this step, we connect Entry to Exit Points based on a scoring function. This function tries to keep agents close to their prefered speed while at the same time avoiding connections to similar patterns, thus reducing unwanted u-turns.  The input for this function is a set of patterns and the output is a set of piecewise linear trajectories connecting the entry and exit points.
-  \item Create collision free trajectories for these pairings. We start with simple line trajectories and start bending them until they are collision free. Points lying at the borders, i.e. the Entry and Exit points, are hard restraints and can never be moved.
-  \item Smoothing trajectories (if needed).  Last, we use splines to minimize the hard turns. We make sure the new trajectories stay close to the original ones, lest we create new collisions.
+  \item Match the elements in the Input and Output sets contained within a patch.
+  In this step, Entry to Exit Points are connected based on a score function that tries to keep agents close to their preferred speed while at the same time avoiding connections to similar patterns, thus reducing unwanted u-turns.
+  The input for this step is a set of patterns and the output is a set of piecewise linear trajectories connecting the entry and exit points.
+  \item Create collision free trajectories for these pairings.
+  Starting from simple line trajectories; these are bended iteratively until they are collision free.
+  %W0e0 start with simple line trajectories and start bending them until they are collision free.
+  Points lying at the borders, i.e. Entry and Exit points, are hard restraints and can never be moved.
+  \item Smooth out trajectories (if needed).
+   Lastly splines are used to minimize the hard turns making sure that the smoothed out trajectories stay as close as possible to the original ones from step $2$ so that no new collisions are introduced.
+%    We make sure the new trajectories stay close to the original ones, lest we create new collisions.
 \end{enumerate}
 
-\note{Problem : is to compute internal trajectories that join all boundary conditions with conitnuous and believable motion trajectories. 
+% \note{Problem : is to compute internal trajectories that join all boundary conditions with conitnuous and believable motion trajectories. 
+% 
+% 2 steps: 
+%  - step 1: connect waypoints
+% INPUT first boudnary conditions are ``alone'' in patches $\rightarrow$ associate/connect waypoints
+%  them 
+% OUTPUT : initial trajectories (piecewise linear trajs, possibly colliding, with ``good'' properties that we will define later on)
+% 
+%  - step 2: optimize intial trajectories by moving control points to remove collisions
+%     INPUIT : initial trazjectories
+%       OUTPUT : colliision trajectories, still enforcing boundary conditions
+%       
+% - step 3 is smoothing
+% }       
 
-2 steps: 
- - step 1: connect waypoints
-INPUT first boudnary conditions are ``alone'' in patches $\rightarrow$ associate/connect waypoints
- them 
-OUTPUT : initial trajectories (piecewise linear trajs, possibly colliding, with ``good'' properties that we will define later on)
-
- - step 2: optimize intial trajectories by moving control points to remove collisions
-    INPUIT : initial trazjectories
-      OUTPUT : colliision trajectories, still enforcing boundary conditions
-      
-- step 3 is smoothing
-}       
-
+A more detailed look on all three steps is given over the remainder of this section.
 
 \subsection{Connecting Boundary Control Points}
 \label{sec:method:init}
