@@ -5,6 +5,8 @@ We found that our algorithm created trajectories that were free of collisions an
 
 \devin{the images are not lining up how I want them too.}
 \panayiotis{Devin, I took the liberty of modifying the figures below to show you how its typically done. Note the label for referencing the figures in the text.}
+\memo{I don't really know how to control the position at which the figures appear, or where do we want them exactly.}
+
 
 \begin{figure*}[t]
  \centering
@@ -61,6 +63,8 @@ The performance was measured on a computer with an Intel Xeon quad core 2.8 GHz 
 \label{fig:res:inputs}
 \end{figure*}
 
+
+
 \begin{figure*}[t]
  \centering
 %
@@ -79,3 +83,49 @@ The performance was measured on a computer with an Intel Xeon quad core 2.8 GHz 
 \caption{ A dot on each graph represents a simulated patch. The patch had a specified number of entrance and exit points whose locations were randomly generated. Our algorithm was run until either the patch was collision free, or it reached 2000 iterations.  \textbf{(a)} The the number of iterations was recorded in relation to number of Entry/Exit Points. The blue line at 2000 iterations shows where the simulation was stopped (6 out of 1000 patches were stopped here, and thus were not collision free). \textbf{(b)} The time to converge was measured in seconds. \devin{is this explanation more clear?} \\\\ //each experiment needed to converge whereas the blue horizontal line indicates the maximum number of allowed iterations ($6$  out of $1000$ inputs \panayiotis{What do we mean by inputs? experiments or the total number of trajectories. Does this graph show how much time it took for a whole patch or for the trajectories with collisions?} didn't converge after $2000$ iterations) . \textbf{(b)} The time to converge was measured in seconds.  \devin{should I remove the titles on the images of the graphs, and instead put their title in the caption?} \panayiotis{No, you should leave them.. If you can edit the images, please remove the borders. I think it will look nicer. Also, this graphs confuse me a little bit. We should discuss them with Guillermo - I want to get a feeling of what exactly are we showing here}}
 \label{fig:res:graphs}
 \end{figure*}
+
+
+\begin{figure*}[t]
+ \centering
+%
+\begin{subfigure}[b]{0.48\linewidth}
+ \centering
+	\includegraphics[width=\linewidth]{images/res-helbing-crossing.png}
+	\caption{Helbing Method}
+ \end{subfigure}
+%
+\begin{subfigure}[b]{0.48\linewidth}
+ \centering
+	\includegraphics[width=\linewidth]{images/res-iter-crossing.png}
+	\caption{Iterative Method}
+ \end{subfigure}
+% 
+\caption{A comparison between both methods, shows the improvement in terms of anticipating a collision. Figure (a) shows little anticipation, it modifies its trajectory until it is about to collide, whereas (b) starts modifying its trajectory gradually from the beginning.}
+\label{fig:res:helbing}
+\end{figure*}
+
+\begin{figure*}[t]
+ \centering
+ \begin{subfigure}[b]{0.24\linewidth}
+ 	\includegraphics[width=\linewidth]{images/res-10-withAgents_1.png}
+ 	\caption{}
+ \end{subfigure}
+ % 
+ \begin{subfigure}[b]{0.24\linewidth}
+ 	\includegraphics[width=\linewidth]{images/res-10-withAgents_2.png}
+ 	\caption{}
+ \end{subfigure}
+ %
+ \begin{subfigure}[b]{0.24\linewidth}
+ 	\includegraphics[width=\linewidth]{images/res-10-withAgents_3.png}
+ 	\caption{}
+ \end{subfigure}
+ %
+ \begin{subfigure}[b]{0.24\linewidth}
+ 	\includegraphics[width=\linewidth]{images/res-10-withAgents_4.png}
+ 	\caption{}
+ \end{subfigure}
+ \caption{Several examples showing the final trajectories for 10 Entry/Exit Points}
+ \label{fig:res:ten}
+\end{figure*}
+
