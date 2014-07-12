@@ -275,17 +275,17 @@ The following approach is employed to rank each possible matching:
 	Lower values indicate bigger preference, with exit point B in this case being the most preferred one.
 	Exit Points F and D lie in the same pattern as Entry Point $1$, so they receive a higher number.
 	}
-	\begin{tabular}{c|c}
+	\begin{tabular}{|c|c|}
 % 		\multicolumn{2}{c}{Rankings of preferred}\\
 % 		\multicolumn{2}{c}{partners for Entry Point A}\\
 		\hline
-		\multicolumn{2}{c}{Entry Point: $1$}	\\
+		\multicolumn{2}{|c|}{\textbf{Entry Point: } $\mathbf{1}$}	\\
  		\hline
  		\hline
 		Exit Point	&	Preference\\
 		\hline
 % 		\hline
-		B	&	$\mathbf{0.34}$	\\
+		\rowcolor[gray]{0.9}B	&	$\mathbf{0.34}$	\\
 		C	&	$1.3$			\\
 		A	&	$2.3$			\\
 		E	&	$2.4$			\\
@@ -342,6 +342,26 @@ For agents moving slowly a control point with the same position but on a differe
 % }
 % 
 
+%%-------------------------------------------------------------------
+%% Removing collisions figure
+%%-------------------------------------------------------------------
+\begin{figure*}[t]
+	\begin{center}
+	\includegraphics[width=0.3\linewidth]{./images/collision-2D-example-with-collision.png}
+	\includegraphics[width=0.3\linewidth]{./images/collision-2D-example-without-collision.png}
+	\includegraphics[width=0.3\linewidth]{./images/collision-2D-example-overlay.png}
+	\\
+	\includegraphics[width=0.3\linewidth]{./images/key-entry-exit-point.png}
+	\caption{
+		\textbf{\textbf{Collision removal}}
+	}
+	\label{fig:collision-removal}
+	\end{center}
+\end{figure*}
+%%-------------------------------------------------------------------
+%% Removing collisions figure
+%%-------------------------------------------------------------------
+
 %%===============================================================
 %% Subsection: Removing Collisions
 %%===============================================================
@@ -367,28 +387,6 @@ Given typical circular agents of radius $r$, $\theta = 2r$ (therefore iff $min(M
 To do so, new control points are added in each iteration (i.e., trajectories are split into segments) that are moved under some constraints until the trajectories are collision free.
 
 % Our algorithm (see Algorithm~\ref{algo:control-points}) creates collision free trajectories by adding and modifying control points. We can guarantee this by looking at the minimum distance matrix. If every value in the matrix is above some threshold then we know that for the entire period of the patch no two agents come closer than that threshold. So if we make that threshold equal to the sum of the radii being compared, those agents will never touch.
-
-
-%%-------------------------------------------------------------------
-%% Removing collisions figure
-%%-------------------------------------------------------------------
-\begin{figure*}[t]
-	\begin{center}
-	\includegraphics[width=0.3\linewidth]{./images/collision-2D-example-with-collision.png}
-	\includegraphics[width=0.3\linewidth]{./images/collision-2D-example-without-collision.png}
-	\includegraphics[width=0.3\linewidth]{./images/collision-2D-example-overlay.png}
-	\\
-	\includegraphics[width=0.3\linewidth]{./images/key-entry-exit-point.png}
-	\caption{
-		\textbf{\textbf{Collision removal}}
-	}
-	\label{fig:collision-removal}
-	\end{center}
-\end{figure*}
-%%-------------------------------------------------------------------
-%% Removing collisions figure
-%%-------------------------------------------------------------------
-
 
 
 %%-------------------------------------------------------------------
@@ -515,9 +513,9 @@ Having all the minimum distances between all the segments of two trajectories, f
 		 \hline \hline
 		$\tau_0$	& $0$			&	$\infty$ 	& $8.31$	& $2.10$	\\
 % 		\hline
-		$\tau_1$	& $\infty$		&	$0$			& $\mathbf{0.14}$	& $7.60$	\\
+		$\tau_1$	& $\infty$		&	$0$			& \cellcolor[gray]{0.9} $\mathbf{0.14}$	& $7.60$	\\
 % 		\hline
-		$\tau_2$	& $8.31$		&	$\mathbf{0.14}$ 		& $0$		& $\infty$	\\
+		$\tau_2$	& $8.31$		&	\cellcolor[gray]{0.9}$\mathbf{0.14}$ 		& $0$		& $\infty$	\\
 % 		\hline
 		$\tau_3$	& $2.10$		&	$7.60$ 		& $\infty$	& $0$		\\
 		\hline
@@ -583,30 +581,51 @@ Having all the minimum distances between all the segments of two trajectories, f
 
 
 
-
+%%===============================================================
+%% Subsection: Smoothing out of trajectories
+%%===============================================================
 \subsection{Smoothing}
 \label{sec:method:smoothing}
 
-Smoothing:
-We have obtained some collision free trajectories, but they may have a jerky trajectory, so we need a final the step to smooth them. We need to take special care of how we do this, we donӴ want the trajectories to change in such a way that they make new collisions. A simple approach is to use cubic splines. Cubic splines connects every pair of points in a trajectory with a polynomial function of degree $3$:
+Handling collisions by control points manipulation results in trajectories with sharp changes in direction.
+Cubic spline interpolation is proposed to smooth out the generated trajectories without introducing any new collisions; i.e., the smoothed out trajectory is as close as possible to the original sharp one (Figure~\ref{fig:smoothing}).
+% We have obtained some collision free trajectories, but they may have a jerky trajectory, so we need a final the step to smooth them. We need to take special care of how we do this, we donӴ want the trajectories to change in such a way that they make new collisions. A simple approach is to use cubic splines.
+Cubic splines interconnect pairs of points in a trajectory with a polynomial function of the $3^{rd}$ degree:
 
 \begin{equation}
- S(x)=a+bx+ cx^2+ dx^3
+	S(x)=a + bx + cx^2 + dx^3
+	\label{eqn:splines}
 \end{equation}
 
-In total, we will need to find the coefficients a, b, c, and d for every segment we have in our trajectory. Those coefficients are determined by continuity $C^1$ restrictions: 
-
-For every spline associated with a trajectory between control point $\mathbf{cp}_1=(\mathbf{p}_1,t_1)$ and $\mathbf{cp}_2=(\mathbf{p}_2,t_2)$, the spline must pass through those same points, that is, $S(t_1)=(\mathbf{p}_1)$ and $S(t_2)=(\mathbf{p}_2)$.
-
-For every two contiguous splines $S_1$ and $S_2$, for the common point they share p, the velocity must be equivalent, that is,  $S'_1(\mathbf{p})=S'_2Ҩ\mathbf{p})$.
+For each one of the trajectory's segments, coefficients $a$, $b$, $c$ and $d$ need to be found under $C^1$ continuity restrictions:
+% In total, we will need to find the coefficients a, b, c, and d for every segment we have in our trajectory. Those coefficients are determined by continuity $C^1$ restrictions:
+\begin{enumerate}
+  \item For every spline associated with a trajectory between two consecutive control points $\mathbf{cp}_i=(\mathbf{p}_i,t_i)$ and $\mathbf{cp}_{i + 1}=(\mathbf{p}_{i + 1},t_{i + 1})$, the spline must pass through those same points; i.e., $S(t_i)=\mathbf{p}_i$ and $S(t_{t + 1})=\mathbf{p}_{i + 1}$.
+  \item The speed at the control point $\mathbf{p_j}$ that connects two consecutive splines $S_{j - 1}$ and $S_{j}$ must be equal; i.e.,
+  \begin{equation}
+%   		\left.\frac{\partial}{\partial t} S_{j-1}\right|_{t = t_j} = 
+%   				\left.\frac{\partial}{\partial t} S_{j}\right|_{t = t_j}
+    		\frac{\partial}{\partial t} S_{j-1}(t_j) = 
+  				\frac{\partial}{\partial t} S_{j}(t_j)
+  \end{equation}
   
-This restrictions can be accommodated in a such way that they form a system of linear equations that can be solved using Cholesky decomposition.
+%   For every two contiguous splines $S_1$ and $S_2$, for the common point they share p, the velocity must be equivalent, that is,  $S'_1(\mathbf{p})=S'_2Ҩ\mathbf{p})$.
+\end{enumerate}
+  
+These restrictions can be accommodated in such way that they form a system of linear equations that can be solved using Cholesky decomposition.
+This method cannot directly be applied to the the current control points, since typically these points are few and the resulting splines are very different to the originally estimated linear trajectories and therefore new collisions are introduced.
+To handle this, the trajectory is uniformly sampled to generate \emph{tacks}, i.e., new \emph{virtual control points}.
+These tacks enforce the splines to be more flat and close to the original linear trajectories (Figure~\ref{fig:smoothing}).
 
-We can not apply directly this method using our current control points. That results in trajectories that vary too much from the original, thus they may end up creating new collisions. To make the spline more similar to the original trajectory, we add new virtual control points sampled uniformly in the linear segments of the trajectories. We call these tacks. These tacks help fix the splines, because they will now pass through the control points and the tacks. Note that the more tacks we put, the closer the spline will fit to the original path.
+% We can not apply directly this method using our current control points. That results in trajectories that vary too much from the original, thus they may end up creating new collisions. To make the spline more similar to the original trajectory, we add new virtual control points sampled uniformly in the linear segments of the trajectories. We call these tacks. These tacks help fix the splines, because they will now pass through the control points and the tacks. Note that the more tacks we put, the closer the spline will fit to the original path.
 
-After that, we compute the coefficients to create the splines and resample along the spline to get new control points. The new trajectory will still be composed of line segments, but since they are smaller, and following closely the path of a cubic function, to the naked eye they will look like curves. The finer the sample, the more it will look like a smooth path.
+Splines are now calculated based on the tacks.
+Instead of storing the splines, these are again sampled based on curvature to get new control points that define a new set of \emph{linear} segments; the higher the curvature the finer the sampling (bottom left of Figure~\ref{fig:smoothing}).
 
-For optimization purposes, the second sampling is not taken uniformly. The trajectories are relatively straight in the middle of the the segments and have higher curvature near control points. For that reason, we take more samples around inflexion points (old control points) than far from them. These samples become the new control points that define the trajectory.
+
+% After that, we compute the coefficients to create the splines and resample along the spline to get new control points. The new trajectory will still be composed of line segments, but since they are smaller, and following closely the path of a cubic function, to the naked eye they will look like curves. The finer the sample, the more it will look like a smooth path.
+% 
+% For optimization purposes, the second sampling is not taken uniformly. The trajectories are relatively straight in the middle of the the segments and have higher curvature near control points. For that reason, we take more samples around inflexion points (old control points) than far from them. These samples become the new control points that define the trajectory.
 
 %%-------------------------------------------------------------------
 %% Removing collisions figure
@@ -618,7 +637,8 @@ For optimization purposes, the second sampling is not taken uniformly. The traje
 	\includegraphics[width=0.48\linewidth]{./images/Smooth3.png}
 	\includegraphics[width=0.48\linewidth]{./images/Smooth4.png}
 	\caption{
-		\textbf{\textbf{Smoothing Proccess}}
+		\textbf{Smoothing Process} (top row) Linear segments are sampled to generate new control points that are use to fit cubic splines.
+		(bottom row) These splines are then sample depending on curvature to generate a new set of linear segments.
 	}
 	\label{fig:smoothing}
 	\end{center}
@@ -627,7 +647,7 @@ For optimization purposes, the second sampling is not taken uniformly. The traje
 %% Removing collisions figure
 %%-------------------------------------------------------------------
 
-
+\panayiotis{Below needs cleaning up}
 
 There may be cases, even with a healthy number of tacks, that the splines still vary too much from the original trajectory. We define a threshold based on the same threshold of collision to know how far a way a point can be moved. For these cases where the new control point surpasses the threshold, we simply donӴ add it to the set of new control points.  There may be extreme cases (for example, due to too a bad sampling of the tacks at the beginning), where the spline has extreme curves that are very different from our initial trajectory. In those extreme cases most of the new control points would not be added and the new smooth trajectory would end up being very similar to the original one.
 
