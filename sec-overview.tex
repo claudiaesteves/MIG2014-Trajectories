@@ -417,29 +417,9 @@ Compute minimum distance matrix $M$\;
 
 
 First, the minimum distance matrix is calculated (Section~\ref{sec:method:remove-collisions:distance-matrix}).
-As long as collisions exist, trajectories $\tau_i$ and $\tau_j$ having the minimum value are found -- that minimum value corresponds two a moment in time and two points: $\mathbf{p}_i$ and $\mathbf{p}_j$
-These two points act as new control points and are moved to handle the collision.
-using a correction force $\mathbf{F}_i$:
+As long as collisions exist, trajectories $\tau_i$ and $\tau_j$ having the minimum value are found -- that minimum value corresponds two a moment in time and two points: $\mathbf{p}_i$ and $\mathbf{p}_j$.
+These two points are moved to handle the collision using correction forces $\mathbf{F}_i$ an $\mathbf{F}_j$:
 
-\begin{equation}
-	\mathbf{p}_i^{new} = \mathbf{p}_i + \mathbf{F}_i
-\end{equation}
-
-
-% Then while collisions still exist we find the smallest value in the minimum distance matrix. From that we find the corresponding trajectories and a point of closest approach for each trajectory $\mathbf{p}_1$ and $\mathbf{p}_2$. We then find an updated position for each of these points.
-
-% To find the the updated position of a new point we add a correction force $\mathbf{F}_c$ to its current position $\mathbf{p}_1^{old}$.
-
-
-% \begin{equation}
-% 	\mathbf{p}_1^{new} = \mathbf{p}_1^{old} + \mathbf{F}_{c_1}
-% \end{equation}
-
-% \panayiotis{Why $P_1$ and not just $\mathbf{p}$? Clarify p1 and p2}
-% 
-% \panayiotis{assign symbols for all forces and position mentioned to make the equations more compact\ldots}
-
-The correction force $\mathbf{F}_i$ for each point is:
 \begin{equation}
 	 \mathbf{F}_{i}= R(\phi) * \hat{\Delta{\mathbf{p}_{i, j}}}* \theta * w_i
 \end{equation}
@@ -460,10 +440,19 @@ w_i = \left\{
 
 $u_i$ and $u_j$ are the speeds of trajectories $\tau_i$ and $\tau_j$.
 
-The calculations for $\mathbf{p}_j$ are symmetric. Once we have this new point for the trajectory we check to see if there is already a control point within a small time interval of the new point. If there is we move that control point to this new position in space and time. Otherwise we add a control 
-point in the trajectory at this new position. Finally we update the minimum distance matrix. We do not need to recheck all the distances in the matrix, only the ones that interact with the trajectory we have modified.
+Having the correction force, point $\mathbf{p}_i$ is moved according to the following equation:
 
-We find that in many situations this algorithm converges quickly and produces collision free trajectories. However there are still situations where it converges slowly or even gets stuck in an infinite loop.
+\begin{equation}
+	\mathbf{p}_i^{new} = \mathbf{p}_i + \mathbf{F}_i
+\end{equation}
+
+
+Once $\mathbf{p}_i^{new}$ is found, a check to find if there is an existing control point withing a small time interval is performed; if successful, then the existing control point is moved to $\mathbf{p}_i^{new}$ otherwise a new control point is added at the same position.
+Finally, column $i$ and row $j$ of the distance matrix $M$ are updated with new distances.
+Calculations for force $\mathbf{F}_j$ and point $\mathbf{p}_j$ are symmetric.
+
+We find that in many situations this algorithm converges quickly and produces collision free trajectories (Section~\ref{sec:results}).
+However there are still situations where it converges slowly or even gets stuck in an infinite loop; for these a maximum number of iterations is set.
 
 
 \subsubsection{Distance Matrix Calculation}
@@ -481,7 +470,7 @@ The following properties apply for all $i, j \in [1, n]$ and can be employed to 
 Recall that a trajectory can consist of one or more segments separated by control points (Section~\ref{sec:method:definitions}) and therefore the minimum has to be found in-between all the trajectory's segments.
 
 Given any two linear trajectory segments $\mathbf{s}^{(1)}$ and $\mathbf{s}^{(2)}$, their minimum distance can be found with an analytic approach.
-First, their common time interval is found; i.e., the period of time that the trajectories coexisted in the patch.
+First, their common time interval is found; i.e., the period of time that the trajectories coexist in the patch.
 If the two segments did not have any common time interval, then their distance is set to infinity (practically a large value).
 If there exists a common interval $[t_{s}, t_{e}]$ then we set $\mathbf{p}_s^{(1)}$ and $\mathbf{p}_s^{(2)}$
 % , $\mathbf{p}_e^{(1)}$ and $\mathbf{p}_e^{(2)}$
