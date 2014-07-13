@@ -346,16 +346,31 @@ For agents moving slowly a control point with the same position but on a differe
 %% Removing collisions figure
 %%-------------------------------------------------------------------
 \begin{figure*}[t]
-	\begin{center}
+	\centering
 	\includegraphics[width=0.5\linewidth]{./images/key-entry-exit-point-hor.png}
-\\	\includegraphics[width=0.3\linewidth]{./images/collision-2D-example-with-collision.png}
-	\includegraphics[width=0.3\linewidth]{./images/collision-2D-example-without-collision.png}
-	\includegraphics[width=0.3\linewidth]{./images/collision-2D-example-overlay.png}
+	\\	
+	\begin{subfigure}[b]{0.27\linewidth}
+		\includegraphics[width=\linewidth]{./images/collision-2D-example-with-collision.png}
+		\caption{}
+	\end{subfigure}
+	~~~~~% 
+	\begin{subfigure}[b]{0.27\linewidth}
+		\includegraphics[width=\linewidth]{./images/collision-2D-example-without-collision.png}
+		\caption{}
+	\end{subfigure}
+	~~~~~%
+	\begin{subfigure}[b]{0.27\linewidth}
+		\includegraphics[width=\linewidth]{./images/collision-2D-example-overlay.png}
+		\caption{}
+	\end{subfigure}
 	\caption{
-		\textbf{\textbf{Collision removal}}
+		\textbf{Collision Handling}
+		(a) The ``worst'' collision is currently identified to be the one between the yellow and pink trajectories at timestep $t_2$ 
+		(b) The two trajectories are deformed to handle the collision
+		%(this introduces a new collision that has to be handled in another step of the algorithm)
+		(c) Overlayed difference between the two trajectories.  
 	}
 	\label{fig:collision-removal}
-	\end{center}
 \end{figure*}
 %%-------------------------------------------------------------------
 %% Removing collisions figure
