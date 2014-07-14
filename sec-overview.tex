@@ -189,8 +189,8 @@ A more detailed look on all three steps is given over the remainder of this sect
 The first step to the proposed algorithm is to match all the entry and exit points in an optimal way.
 To do this, a measure of the match's quality has to be defined.
 %we have to measure how good or bad a match is.
-Intuitively, there are some matches that are better than others; e.g., judging by observation, trajectories passing near the center of the patch look better that the ones staying close to the borders forcing in essence the characters to cover more space.
-Some other aspects can also be considered, such as how close the speed needed by an agent to travel from an Entry to an Exit Point is compared to typical walking comfort speeds of humans.
+Intuitively, there are some matches that are better than others; e.g., judging by observation, trajectories passing near the center of the patch look better than the ones staying close to the borders forcing in essence the characters to cover more space.
+Some other aspects can also be considered, such as how close the speed needed by an agent to travel from an entry to an exit point is compared to typical walking comfort speeds of humans.
 A comfort speed of $u_{cft} = 1.33~m/s$, which is the normal walking speed of humans in an unconstrained environment is used in this work \cite{Whittle2003Gait}.
 
 For a square patch, we define an order of preference between matching; first we prefer to match points between opposing patterns, followed by neighboring ones and finally with points on the pattern itself.
@@ -238,12 +238,11 @@ Initialize all $m \in M$ and $w \in W$ to \textit{free} \;
 % All that is needed to use this algorithm is to generate preference values for entry and exit points.
 % For each of the entry Entry points, the following steps are appliedThis is done using the following steps:
 In order to apply Algorithm~\ref{alg:stable-matching}, preference values for all combinations of entry and exit points should be defined.
-To do so, each entry point keeps a \emph{proposal list} $\mathbf{L}_s$ indicating order of preference for matching (Figure~\ref{tab:proposal-list}).
+To do so, each entry point keeps a \emph{proposal list} $\mathbf{L}_s$ indicating the order of preference for its matching (Table~\ref{tab:proposal-list}).
 The following approach is employed to rank each possible matching:
 \begin{enumerate}
   \item Find the speed it would take to travel from an entry point to all exit points.
-  Assuming that $(\mathbf{p}_1, t_1)$ and $(\mathbf{p}_2,t_2)$ are position and time of the entry and exit points respectively
-  speed is defined as $u = s / {\Delta}t$ where $s=|\mathbf{p}_2-\mathbf{p}_1|$ and ${\Delta}t = t_2 - t_1$ when $t_2 > t_1$, otherwise ${\Delta}t=\pi + t_2 - t_1$.
+  Assuming that $(\mathbf{p}_1, t_1)$ and $(\mathbf{p}_2,t_2)$ are the position and time of the entry and exit points respectively, speed is defined as $u = s / {\Delta}t$ where $s=|\mathbf{p}_2-\mathbf{p}_1|$ and ${\Delta}t = t_2 - t_1$ when $t_2 > t_1$, otherwise ${\Delta}t=\pi + t_2 - t_1$.
   \footnote{More details on why this this last assumption is made will be presented later during the creation of the initial set of trajectories.}
   \item %Next, each pair of points is assigned a number between $0$ and $\pi/2$, with $0$ indicating maximum closeness to comfort speed with $arctan(|u_{cft} -u|)$.
   Next, each pair of points is assigned a preference value:
@@ -253,7 +252,7 @@ The following approach is employed to rank each possible matching:
   \end{equation}
   where
   		$u_{match} = arctan(|u_{cft} - u|) \in [0, \pi / 2)$ indicates closeness to desired speed with $0$ indicating maximum closeness. 
-    	$p = \{0, 2, 4\}$ defines a \emph{penalty} value that depends on where the two points lie relative to each other; for points on opposing patterns there is no penalty, for neighboring patches it is $2$ and for points on the same pattern it is $4$ (this can be generalized to any prism like patch). 
+    	$p = \{0, 2, 4\}$ defines a \emph{penalty} value that depends on where the two points lie relative to each other; for points on opposing patterns there is no penalty, for neighboring patches it is $2$ and for points on the same pattern it is $4$ (this can be generalized to any prism-like patch). 
 
   % and We add penalties for points being in the same patch, for those points, we add $4$. For points lying in the contiguous pattern we also add a smaller penalty, $2$.
   \item Sort $\mathbf{L}_s$ in ascending order; the first entry indicates the most desired exit point.
@@ -266,9 +265,9 @@ The following approach is employed to rank each possible matching:
 \begin{table}[b]
 	\centering
 	\caption{
-	\textbf{Proposal List} Each entry point keeps a list of preference scores for all possible Exit points.
+	\textbf{Proposal List} Each entry point keeps a list of preference scores for all possible exit points.
 	Lower values indicate bigger preference, with exit point B in this case being the most preferred one.
-	Exit Points F and D lie in the same pattern as Entry Point $1$, so they receive a higher number.
+	Exit Points F and D lie in the same pattern as Entry Point $1$, so they receive a higher score.
 	}
 	\begin{tabular}{|c|c|}
 % 		\multicolumn{2}{c}{Rankings of preferred}\\
@@ -294,14 +293,14 @@ The following approach is employed to rank each possible matching:
 %% The Proposal List table
 %%-------------------------------------------------------------------
 
-It is emphasized here, that each entry point keeps its own proposal list.
+It should be emphasized here, that each entry point keeps its own proposal list.
 After each entry point has been assigned a proposal list, Algorithm~\ref{alg:stable-matching} is used to define matches between the entry and exit points;
 every two points that remained engaged at the end of the algorithm become a pair.
 
 The final step is creating the initial batch of trajectories.
-Firstly, the paired points are connect with straight lines;
+Firstly, the paired points are connected via straight lines;
 % We start by trying to connect the points with a straight line.
-if a line tries to connect two points backwards in time (that is if $t_2 < t_1$), the initial trajectory is split into two parts -- from $t_1$ to $\pi$ and from $0$ to $t_2$; similarly to approach followed by \cite{Yersin:2009}.
+if a line tries to connect two points backwards in time (that is if $t_2 < t_1$), the initial trajectory is split into two parts -- from $t_1$ to $\pi$ and from $0$ to $t_2$ as in \cite{Yersin:2009}.
 % We do something special when a line tries to travel backwards in time, i.e. $t_2<t_1$.
 % For these cases we split the initial trajectory in two.
 % One going from $t_1$ to period $\pi$, another one going from $0$ to $t_2$.
@@ -310,13 +309,12 @@ The same approach is used if the trajectory enforces unrealistically high speed 
 
 Further adjustments to the initial trajectories are done for some special cases.
 For agents traveling only over an edge, a control point is added near the center of the patch.
-For agents moving slowly a control point with the same position but on a different time is added, resulting in agents that stop suddenly (as if pausing to look around) but later on continuing their journey at a better speed.
+For agents moving slowly, a control point with the same position but on a different time is added, resulting in agents that stop suddenly (as if pausing to look around) but later on continuing their journey at a better speed.
 
 % \devin{The output of this function is a set of trajectories. Collisions are probably still present in the trajectories at this point.}
  
- To conclude, this step results in linear trajectories that are optimized for speed and coverage of space using an objective function (Equation~\ref{eqn:objective_function}).
- These trajectories though can result in collisions, since no special care was taken to handle that.
- To do so, an iterative approach has been proposed.
+This step results in linear trajectories that are optimized for speed and coverage of space using an objective function (Equation~\ref{eqn:objective_function}).
+ These trajectories though can be colliding with each other, since no special care has been taken up to this point to handle that. To address this issue, the iterative technique, described in the next paragraphs has been proposed.
 
 % \note{
 % - INPUT OUTPUT objective
@@ -378,9 +376,8 @@ For agents moving slowly a control point with the same position but on a differe
 \label{sec:method:remove-collisions}
 
 %\panayiotis{Make sure for all the equation that the correct symbols are inserted: bold for vectors, normal fonts for scalars, etc.}
-Most of the times, the set of linear trajectories generated by Algorithm~\ref{alg:stable-matching} have collisions and therefore care should be taken to remove them since collisions rarely occur in real life human crowds.
-An algorithm that manipulates the linear trajectories by moving control points is proposed.
-Since patches are concatenated together to create larger crowds care should be taken during trajectory modification so that the spatio-temporal boundary control points (i.e., entry and exit ones) are not modified; other control points can be added and manipulated.
+The set of linear trajectories generated by Algorithm~\ref{alg:stable-matching} will most likely have collisions with the environment or with other trajectories. As collisions rarely take place in real-life human crowds, a strategy to remove them from the initial trajectories should be defined. For this, we propose an algorithm that manipulates the linear trajectories by moving control points.
+Since patches are concatenated together to create larger crowds, care should be taken during trajectory modification so that the spatio-temporal boundary control points (i.e., entry and exit ones) are not modified; other control points can be added and manipulated.
 % The removal procedure must handle collisions by manipulation of the trajectories aiming to keep the spatio-temporal entrance and exit points (boundary control points).
 
 % These trajectories contain both movable and boundary control points; 
@@ -391,9 +388,9 @@ Since patches are concatenated together to create larger crowds care should be t
 %We focus on creating collision free motion since obvious collisions in simulations greatly reduces the realism of the animation.
 
 \textbf{Algorithm for collision handling} An iterative algorithm for handling the collisions is proposed (Algorithm~\ref{algo:control-points}).
-The main idea is simple; given a matrix $M$ that stores the current minimum distances in-between all trajectories iterate modifying trajectories (and therefore $M$) until $min(M) > \theta$, where $\theta$ represents a minimum allowed distance value.
+The main idea is the following: given a matrix $M$ that stores the current minimum distances in-between all trajectories, the algorithm iterates modifying the trajectories (and therefore its closest values $M$) until $min(M) > \theta$, where $\theta$ represents a minimum allowed distance value.
 Given typical circular agents of radius $r$, $\theta = 2r$ (therefore iff $min(M) > \theta \Leftrightarrow \text{patch is collision free}$).
-To do so, new control points are added in each iteration (i.e., trajectories are split into segments) that are moved under some constraints until the trajectories are collision free.
+To do so, new control points are added at each iteration (i.e., trajectories are split into segments) that are moved under some constraints until the trajectories are collision free.
 
 % Our algorithm (see Algorithm~\ref{algo:control-points}) creates collision free trajectories by adding and modifying control points. We can guarantee this by looking at the minimum distance matrix. If every value in the matrix is above some threshold then we know that for the entire period of the patch no two agents come closer than that threshold. So if we make that threshold equal to the sum of the radii being compared, those agents will never touch.
 
@@ -424,7 +421,7 @@ Compute minimum distance matrix $M$\;
 
 
 First, the minimum distance matrix is calculated (Section~\ref{sec:method:remove-collisions:distance-matrix}).
-As long as collisions exist, trajectories $\tau_i$ and $\tau_j$ having the minimum value are found -- that minimum value corresponds two a moment in time and two points: $\mathbf{p}_i$ and $\mathbf{p}_j$.
+As long as collisions exist, trajectories $\tau_i$ and $\tau_j$ having the minimum value are found -- that minimum value corresponds to a moment in time and two points: $\mathbf{p}_i$ and $\mathbf{p}_j$.
 These two points are moved to handle the collision using correction forces $\mathbf{F}_i$ an $\mathbf{F}_j$:
 
 \begin{equation}
@@ -454,11 +451,11 @@ Having the correction force, point $\mathbf{p}_i$ is moved according to the foll
 \end{equation}
 
 
-Once $\mathbf{p}_i^{new}$ is found, a check to find if there is an existing control point withing a small time interval is performed; if successful, then the existing control point is moved to $\mathbf{p}_i^{new}$ otherwise a new control point is added at the same position.
+Once $\mathbf{p}_i^{new}$ is found, a check to find if there is an existing control point withing a small time interval is performed; if successful, then the existing control point is moved to $\mathbf{p}_i^{new}$, otherwise a new control point is added at the same position.
 Finally, column $i$ and row $j$ of the distance matrix $M$ are updated with new distances.
 Calculations for force $\mathbf{F}_j$ and point $\mathbf{p}_j$ are symmetric.
 
-We find that in many situations this algorithm converges quickly and produces collision free trajectories (Section~\ref{sec:results}).
+We have found that in most situations this algorithm converges quickly and produces collision free trajectories (Section~\ref{sec:results}).
 However there are still situations where it converges slowly or even gets stuck in an infinite loop; for these a maximum number of iterations is set.
 
 
@@ -478,8 +475,8 @@ Recall that a trajectory can consist of one or more segments separated by contro
 
 Given any two linear trajectory segments $\mathbf{s}^{(1)}$ and $\mathbf{s}^{(2)}$, their minimum distance can be found with an analytic approach.
 First, their common time interval is found; i.e., the period of time that the trajectories coexist in the patch.
-If the two segments did not have any common time interval, then their distance is set to infinity (practically a large value).
-If there exists a common interval $[t_{s}, t_{e}]$ then we set $\mathbf{p}_s^{(1)}$ and $\mathbf{p}_s^{(2)}$
+If the two segments do not have any common time interval, then their distance is set to infinity (practically a large value).
+If there exists a common interval $[t_{s}, t_{e}]$, then we set $\mathbf{p}_s^{(1)}$ and $\mathbf{p}_s^{(2)}$
 % , $\mathbf{p}_e^{(1)}$ and $\mathbf{p}_e^{(2)}$
 as the two segments position at time $t_s$.
 Additionally, agents moving on these two segments have a velocity of $\mathbf{v}^{(1)}$ and $\mathbf{v}^{(2)}$ respectively.
@@ -507,14 +504,14 @@ Solving for $t$ after setting the derivative $d'(t) = 0$ we get the time of mini
 
 If $0 \le t_c \le t_e - t_s$, then setting $t = t_c$ in Equation~\ref{eqn:distance} the minimum distance between segments $\mathbf{s}^{(1)}$ and $\mathbf{s}^{(2)}$ is found.
 If $t_c$ is outside the bounds of the segment we check the endpoints of the line segment for collision.
-Having all the minimum distances between all the segments of two trajectories, finding the minimum distance is trivial (consult Table~\ref{tab:minimum-distances} for an example.
+Having the minimum distances between all the segments of two trajectories, finding the minimum distance is trivial (see Table~\ref{tab:minimum-distances} for an example).
 
 %%-------------------------------------------------------------------
 %% The Minimum Distances Table
 %%-------------------------------------------------------------------
 \begin{table}[t]
 	\centering
-	\caption{\textbf{Distance Matrix} Minimum distances between 4 trajectories ($\tau_0 - \tau_3$) are updated whilst modifying the trajectories.
+	\caption{\textbf{Distance Matrix.} Minimum distances between 4 trajectories ($\tau_0 - \tau_3$) are updated whilst modifying the trajectories.
 	At this iteration of the algorithm, the minimum distance was between trajectories $\tau_1$ and $\tau_2$ and therefore they will be modified for the next step.}
 	\begin{tabular}{|c||cccc|}
 		\hline
@@ -609,7 +606,7 @@ Cubic splines interconnect pairs of points in a trajectory with a polynomial fun
 For each one of the trajectory's segments, coefficients $a$, $b$, $c$ and $d$ need to be found under $C^1$ continuity restrictions:
 % In total, we will need to find the coefficients a, b, c, and d for every segment we have in our trajectory. Those coefficients are determined by continuity $C^1$ restrictions:
 \begin{enumerate}
-  \item For every spline associated with a trajectory between two consecutive control points $\mathbf{cp}_i=(\mathbf{p}_i,t_i)$ and $\mathbf{cp}_{i + 1}=(\mathbf{p}_{i + 1},t_{i + 1})$, the spline must pass through those same points; i.e., $S(t_i)=\mathbf{p}_i$ and $S(t_{t + 1})=\mathbf{p}_{i + 1}$.
+  \item Every spline associated with a trajectory between two consecutive control points $\mathbf{cp}_i=(\mathbf{p}_i,t_i)$ and $\mathbf{cp}_{i + 1}=(\mathbf{p}_{i + 1},t_{i + 1})$ must pass through those same points; i.e., $S(t_i)=\mathbf{p}_i$ and $S(t_{t + 1})=\mathbf{p}_{i + 1}$.
   \item The speed at the control point $\mathbf{p_j}$ that connects two consecutive splines $S_{j - 1}$ and $S_{j}$ must be equal; i.e.,
   \begin{equation}
 %   		\left.\frac{\partial}{\partial t} S_{j-1}\right|_{t = t_j} = 
@@ -624,7 +621,7 @@ For each one of the trajectory's segments, coefficients $a$, $b$, $c$ and $d$ ne
 These restrictions can be accommodated in such way that they form a system of linear equations that can be solved using Cholesky decomposition.
 This method cannot directly be applied to the the current control points, since typically these points are few and the resulting splines are very different to the originally estimated linear trajectories and therefore new collisions are introduced.
 To handle this, the trajectory is uniformly sampled to generate \emph{tacks}, i.e., new \emph{virtual control points}.
-These tacks enforce the splines to be more flat and close to the original linear trajectories (Figure~\ref{fig:smoothing}).
+These tacks enforce the splines to be flatter and closer to the original linear trajectories (Figure~\ref{fig:smoothing}).
 
 % We can not apply directly this method using our current control points. That results in trajectories that vary too much from the original, thus they may end up creating new collisions. To make the spline more similar to the original trajectory, we add new virtual control points sampled uniformly in the linear segments of the trajectories. We call these tacks. These tacks help fix the splines, because they will now pass through the control points and the tacks. Note that the more tacks we put, the closer the spline will fit to the original path.
 
@@ -647,7 +644,7 @@ Instead of storing the splines, these are again sampled based on curvature to ge
 	\includegraphics[width=0.48\linewidth]{./images/Smooth4.png}
 	\caption{
 		\textbf{Smoothing Process} (top row) Linear segments are sampled to generate new control points that are use to fit cubic splines.
-		(bottom row) These splines are then sample depending on curvature to generate a new set of linear segments.
+		(bottom row) These splines are then sampled depending on their curvature to generate a new set of linear segments.
 	}
 	\label{fig:smoothing}
 	\end{center}
@@ -658,8 +655,14 @@ Instead of storing the splines, these are again sampled based on curvature to ge
 
 \panayiotis{Below needs cleaning up}
 
-There may be cases, even with a healthy number of tacks, that the splines still vary too much from the original trajectory. We define a threshold based on the same threshold of collision to know how far a way a point can be moved. For these cases where the new control point surpasses the threshold, we simply donӴ add it to the set of new control points.  There may be extreme cases (for example, due to too a bad sampling of the tacks at the beginning), where the spline has extreme curves that are very different from our initial trajectory. In those extreme cases most of the new control points would not be added and the new smooth trajectory would end up being very similar to the original one.
+There may be cases, even with a healthy number of tacks,
 
-Having splines for trajectories is better than having simple straight lines, but we know humans donӴ  follow either of them when walking,  so other methods can be tried to improve this initial approach.
+ \claudia{What is {\it ``healthy"} in this context?}
+
+that the splines still vary too much from the original trajectory. We define a threshold based on the same threshold of collision to know how far a way a point can be moved. For these cases where the new control point surpasses the threshold, we simply don't add it to the set of new control points.  There may be extreme cases (for example, due to too a bad sampling of the tacks at the beginning), where the spline has extreme curves that are very different from our initial trajectory. In those extreme cases most of the new control points would not be added and the new smooth trajectory would end up being very similar to the original one.
+
+Having splines for trajectories is better than having simple straight lines, but we know humans don't  follow either of them when walking,  so other methods can be tried to improve this initial approach.
+
+\claudia{Is there a reference to support the above statement?}
 
 
