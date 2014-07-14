@@ -1,30 +1,13 @@
 \section{Methodology}
 \label{sec:method}
 
-%%----------------------------------------------------------------
-%% Overview Figure
-%%----------------------------------------------------------------
-\begin{figure*}[t]
-	\begin{center}
-	\includegraphics[width=0.9\linewidth]{./images/overview-hd.png}
-% 	\includegraphics[height=4cm]{./images/patches-empty-patch-with-pattern.png}
-% 	\includegraphics[height=4cm]{./images/patches-connected-patch.png}
-% 	\includegraphics[height=4cm]{./images/patches-collision-free-patch.png}
-% 	\includegraphics[height=4cm]{./images/patches-smoothed-patch.png}
-	\caption{
-		\textbf{Overview} Input and output points in a patch's patterns are initially connected and subsequently modified using the proposed optimization approach and smoothed out to be collision free.
-	}
-	\label{fig:overview}
-	\end{center}
-\end{figure*}
-%%----------------------------------------------------------------
-%% Overview Figure
-%%----------------------------------------------------------------
 
-%\note{Overview: remind definitions on crowd patches: patch, pattern, spatiotemporal waypoints (boundary conditions: input, output, initial states // boundary conditions should be strictly enforced. Movable control points), period of time \dots}
+\claudia{It is a bit weird to have Figure 3 before Figure 2 in the paper isn't it? Maybe we can put Figure 2 after, as they are referenced in the paper? Like this ? }
+
+%\note{Overview: remind definitions on crowd patches: patch, pattern, spatio-temporal waypoints (boundary conditions: input, output, initial states // boundary conditions should be strictly enforced. Movable control points), period of time \dots}
 
 In this section we present the proposed methodology for generating trajectories for patches.
-We first give some definitions and notations (Section~\ref{sec:method:definitions}), followed by an overview of the method (Section~\ref{sec:method:overview}), and trajectories initial generation, collision handling and smoothing out (Sections~\ref{sec:method:init}--\ref{sec:method:smoothing}).
+We first give some definitions and notations (Section~\ref{sec:method:definitions}), followed by an overview of the method (Section~\ref{sec:method:overview}), and the description of our method to generate initial trajectories, handle collisions and smoothing out the resulting trajectories (Sections~\ref{sec:method:init}--\ref{sec:method:smoothing}).
 
 %%===============================================================
 %% Subsection: Patch Definitions
@@ -32,13 +15,14 @@ We first give some definitions and notations (Section~\ref{sec:method:definition
 \subsection{Definitions}
 \label{sec:method:definitions}
 
-Before presenting our approach on trajectory generation for Crowd Patches, we present some definitions and notations regarding Crowd Patches.
-Please refer to Figure~\ref{fig:definitions} for a visual representation of the definitions and \cite{Yersin:2009} for a more detailed description.
+Before presenting our approach on trajectory generation, we present some definitions and notations regarding Crowd Patches.
+Please refer to Figure~\ref{fig:definitions} for a visual representation of the definitions and to~\cite{Yersin:2009} for a more detailed description on these concepts.
 
 %%----------------------------------------------------------------
 %% Patch Definitions
 %%----------------------------------------------------------------
-\begin{figure}
+ 
+\begin{figure}[h]
 \begin{center}
 	\includegraphics[width=0.9\linewidth]{./images/patch-definitions-arrows.png}
 	\caption{
@@ -47,27 +31,15 @@ Please refer to Figure~\ref{fig:definitions} for a visual representation of the 
 	\label{fig:definitions}
 	\end{center}
 \end{figure}
-%%----------------------------------------------------------------
-%% Patch Definitions
-%%----------------------------------------------------------------
  
-%\begin{description}
-
-%\item[Patch]{
 A \textbf{patch} is a set $\{ A, \pi, D, S\}$ where $A$ is geometrical area with a convex polygonal shape, $\pi$ the period of time of the animation and $D$ and $S$ are the sets of dynamic and static objects, respectively. 
 These last two sets may be empty in case of an empty patch.
 %This implies that objects in sets $D$ and $S$ move in the area defined by $A$ over some period in time $[t_1, t_2]: 0\le t_1 < t_2 \le \pi$. 
 %}
 
-%\item[Static obstacles]{
 \textbf{Static objects} are simple obstacles whose geometry is fully contained inside the patch.
-%}
 
-%\item[Dynamic objects]{
 \textbf{Dynamic objects} are animated; i.e., they are moving in time according to a set of trajectories $T$.
-%}
-
-%\end{description}
 
 \subsubsection{Trajectories}
 
@@ -107,6 +79,8 @@ The following conditions must be respected in each sequence of trajectories asso
 
 Note that the second condition implicitly implies that in sequences with multiple trajectories, each middle trajectory must be fully defined in the period of time $[0,\pi]$, while $\tau_1$ must be defined in $[t_{initial},\pi]$ and $\tau_n$ must be defined in $[0, t_{final}]$.
 
+\claudia{I am a bit confused with the parameter $\pi$. Is this the whole-animation time or is it just the parameter for each section of a trajectory (and also the complete trajectory)? I think the notation is clearer like in the next section with $\pi^{(i)}$ for the ending parameter of a subsection and just $\pi$ for the ending parameter of the overall trajectory. What do you think?}
+
 
 \subsubsection{Patterns}
 
@@ -114,7 +88,7 @@ Note that the second condition implicitly implies that in sequences with multipl
 % 
 % \item[Pattern -]{
 A patch can be considered as a spatio-temporal right prism depending on the type of polygon used as its area (cube in the case of a squared area patch).
-A \textbf{pattern} can be defined as one lateral side of the prism (Figure~\ref{fig:definitions}).
+A \textbf{pattern} can be defined as one lateral face of the prism (Figure~\ref{fig:definitions}).
 Specifically, it is a rectangle whose base is one of the edges of the polygonal area (we define $\mathbf{l} \in \mathbb{R}^2$ as this two dimensional vector), and its height is equal to the period $\pi$.
 In addition to these, patterns also include the sets $\mathbf{I}$ and $\mathbf{O}$ of Input and Output boundary control points respectively.
 The input set contains the boundary control points where exogenous agents begin their trajectories; we call these \emph{Entry Points}.
@@ -139,11 +113,11 @@ $P^{(2)}=\{\mathbf{l}^{(2)}, \pi^{(2)}, \mathbf{I}^{(2)}, \mathbf{O}^{(2)}\}$, t
 \end{equation}
 
 Under these conditions, $P_1$ is the mirror pattern of $P_2$ and vice versa.
-When these patches are animated, this will be observed as moving agents going from one patch to adjacent ones. 
+When these patches are animated, agents will be going from one patch to adjacent ones. 
 If the area $\mathbf{A}$ of a patch is a square then 4 patterns are defined, one per side.
 Patterns defined by a patch have the property that the sum of the cardinality of all the inputs is the same as the sum of the cardinality of all outputs; we call this the parity condition: $\sum(|inputs|)= \sum(|outputs|)$.
 
-A patch defines a set of patterns, and conversely, a set of patterns that satisfies the parity condition;i.e. all patterns in the set have same period and whose vectors define a convex polygonal area, can be used to create a patch indirectly.
+A patch defines a set of patterns, and conversely, a set of patterns that satisfies the parity condition (i.e. all patterns in the set have same period and whose vectors define a convex polygonal area) can be used to create a patch indirectly.
 
 %  }
 % 
@@ -152,22 +126,43 @@ A patch defines a set of patterns, and conversely, a set of patterns that satisf
 %%===============================================================
 %% Subsection: Method Overview
 %%===============================================================
+
+%%----------------------------------------------------------------
+%% Overview Figure
+%%----------------------------------------------------------------
+\begin{figure*}[ht]
+	\begin{center}
+	\includegraphics[width=0.9\linewidth]{./images/overview-hd.png}
+% 	\includegraphics[height=4cm]{./images/patches-empty-patch-with-pattern.png}
+% 	\includegraphics[height=4cm]{./images/patches-connected-patch.png}
+% 	\includegraphics[height=4cm]{./images/patches-collision-free-patch.png}
+% 	\includegraphics[height=4cm]{./images/patches-smoothed-patch.png}
+	\caption{
+		\textbf{Overview.} Input and output points in a patch's patterns are initially connected and subsequently modified using the proposed optimization approach and smoothed out to be collision free.
+	}
+	\label{fig:overview}
+	\end{center}
+\end{figure*}
+%%----------------------------------------------------------------
+%% Overview Figure
+%%----------------------------------------------------------------
+
 \subsection{Overview}
 \label{sec:method:overview}
 
 The objective of the proposed work is to generate a patch given a set of patterns.
-This implies that given a set of constraints such as input and output spatio-temporal control points, a set of believable collision-free trajectories should be generated that interconnect all of them.
+This implies that given a set of constraints such as input and output spatio-temporal control points, a set of believable collision-free trajectories that interconnect all of them should be generated.
 This process has three main steps (Figure~\ref{fig:overview}):
 \begin{enumerate}
-  \item Match the elements in the Input and Output sets contained within a patch.
-  In this step, Entry to Exit Points are connected based on a score function that tries to keep agents close to their preferred speed while at the same time avoiding connections to similar patterns, thus reducing unwanted u-turns.
+  \item Match the elements in the Input and Output sets contained within a patch. {--}
+  In this step, entry and exit points are connected based on a score function that tries to keep agents close to their preferred speed while at the same time avoiding connections to similar patterns, thus reducing unwanted u-turns.
   The input for this step is a set of patterns and the output is a set of piecewise linear trajectories connecting the entry and exit points.
-  \item Create collision free trajectories for these pairings.
-  Starting from simple line trajectories; these are bended iteratively until they are collision free.
+  \item Create collision free trajectories for these pairings.{--}
+  Starting from simple line trajectories; bend them by iterative subdivisions until they are collision free.
   %W0e0 start with simple line trajectories and start bending them until they are collision free.
-  Points lying at the borders, i.e. Entry and Exit points, are hard restraints and can never be moved.
-  \item Smooth out trajectories (if needed).
-   Lastly splines are used to minimize the hard turns making sure that the smoothed out trajectories stay as close as possible to the original ones from step $2$ so that no new collisions are introduced.
+  Points lying at the borders, i.e. entry and exit points, are hard constraints and can never be moved.
+  \item Smooth out trajectories (if needed).{--}
+   Splines are used as a final step to minimize the hard turns ensuring that the smoothed-out trajectories stay as close as possible to the original ones from Step $2$ to avoid introducing new collisions.
 %    We make sure the new trajectories stay close to the original ones, lest we create new collisions.
 \end{enumerate}
 
@@ -232,7 +227,7 @@ Initialize all $m \in M$ and $w \in W$ to \textit{free} \;
 		}
 	}
 }
-\caption{Gale-Shapley Stable Marriage Algorithm from \cite{Gusfield1989SMP}.}
+\caption{Gale-Shapley Stable Marriage Algorithm from \protect\cite{Gusfield1989SMP}.}
 \label{alg:stable-matching}
 \end{algorithm}
 %%-------------------------------------------------------------------
@@ -326,7 +321,7 @@ For agents moving slowly a control point with the same position but on a differe
 % \note{
 % - INPUT OUTPUT objective
 % 
-% - when you connect two boundary conditions, you connect two spation temporal waypoints. This means that you determine this way where characters enter, where they exit patches and the speed between waypoints. 
+% - when you connect two boundary conditions, you connect two spatio-temporal waypoints. This means that you determine this way where characters enter, where they exit patches and the speed between waypoints. 
 % 
 % - we can define what is a ԧoodԠconnection: avoid half turn, avoid extreme speeds. 
 % 

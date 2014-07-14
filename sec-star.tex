@@ -3,16 +3,15 @@
 
 Most often, virtual environments are populated based on crowd simulation approaches~\cite{ThalmannBook:2013}.
 An ambient crowd is generated from a large set of moving characters, mainly walking ones.
-Recent efforts in crowd simulation have enabled dealing with great performances ~\cite{PettreCAVW:2006,Treuille:2006}, high densities~\cite{Narain:2009} or controllable crowds~\cite{Guy:2009}.
-There has been a lot of effort to develop velocity-based approaches~\cite{Paris:2007,VanDenBerg:2008} which display much more smooth and realistic locomotion trajectories, especially thanks to anticipatory adaptation to avoid collisions between characters. \note{Nevertheless, \dots}
+Recent efforts in crowd simulation have enabled dealing with improving computational performance ~\cite{PettreCAVW:2006,Treuille:2006}, dealing with high densities~\cite{Narain:2009} or controllable crowds~\cite{Guy:2009}.
+There has also been a lot of effort to develop velocity-based approaches~\cite{Paris:2007,VanDenBerg:2008} which display much more smooth and realistic locomotion trajectories, especially thanks to anticipatory adaptation to avoid collisions between characters. \note{Nevertheless, \dots} \claudia{Is this an idea that we want to continue or a forgotten word?}
 
 \panayiotis{Most of the related work we present here is agent based, even though flow based approaches are relevant also.}
 
-Simulation-based techniques are ideal for creating an ambient crowd for large environments.
-Several problems are recurrent with such approaches:
+Simulation-based techniques seem ideal for creating an ambient crowd for large environments but several problems are recurrent with such approaches:
 a) crowd simulation is computationally demanding, crowd size is severely limited for interactive applications on light computers;
 b) simulation is based on simplistic behaviours (e.g., walking, avoiding collisions, etc.) and therefore it is difficult to generate diverse and rich crowds based on classical approaches;
-c) crowd simulation is prone to animation artifacts or deadlock situations, it is impossible to guarantee animation quality. 
+c) crowd simulation is prone to animation artifacts or deadlock situations and it is thus impossible to guarantee animation quality. 
 
 Example-based approaches attempt to solve the limitations on animation quality.
 The key idea of this approaches is to indirectly define the crowd rules from existing crowd data (such as real people trajectories)~\cite{Lerner:2007,Ju:2010,Charalambous:2014}.
@@ -27,11 +26,10 @@ Trajectories are periodic in time so that the crowd motion can be played endless
 Trajectories boundary conditions at the geometrical limits of patches are controlled to be able to connect together two different patches with characters moving from one patch to another.
 Thus, a crowd animated from a set of patches have a seamless motion and patches' limits cannot be easily detected.
 The boundary conditions are all registered into {\it patterns}, which are sort of gates for patches with a set of spacetime input/output points.
-For a more detailed expanation please refer to \cite{Yersin:2009} for more details. 
+For a more detailed expanation on the crowd patches approach please refer to \cite{Yersin:2009}. 
 
-Nevertheless, using the crowd patches approach, it is important to work with a limited set of patterns to be able to connect various patches together.
-As a result, it is important to be able to compose a patch by starting from a set of patterns, and then deducing internal trajectories of patches from the set of boundary conditions defined by the patterns.
-As a result, we need to compute trajectories for characters that pass through a given set of spatiotemporal waypoints; i.e., characters should reach specific points in space at specific points in time.
+Nevertheless, using the crowd patches approach, a limited set of patterns should be used to be able to connect various patches together. As a result, it is important to be able to compose a patch by starting from a set of patterns, and then deducing internal trajectories of patches from the set of boundary conditions defined by the patterns.
+As a result, we need to compute trajectories for characters that pass through a given set of spatio-temporal waypoints; i.e., characters should reach specific points in space at specific points in time.
 This problem is difficult since generally speaking steering techniques for characters consider $2D$ spatial goals, but do not consider the time a character should take to reach its waypoint.
 Therefore, dedicated techniques are required. 
 
@@ -39,12 +37,12 @@ Yersin \etal suggest using an adapted Social Forces technique to compute interna
 The key idea is to connect input/output points together with linear trajectories and model characters as particles attracted by a goal moving along one of these linear trajectories, combined with repulsion forces to avoid collision between them and static obstacles.
 One problem with this approach is limited density level, as well as the level of quality of trajectories that suffer from the usual drawbacks of Helbing's generated trajectories, i.e., lack of anticipation, which results into non natural local avoidance maneuvers (\note{see Figure XXXXXXXX}). 
 
-Compared to previous techniques to compute internal trajectories, we suggest formulating the problem of computing internal trajectories as an optimization problem.
+Compared to previous techniques we suggest formulating the problem of computing internal trajectories as an optimization problem.
 First, we suggest optimizing the way input and output points are connected.
-Especially, since waypoints are defined in space and time, we connect them trying to have some {\it good} walking speed (i.e., close to the average human walking speed).
+Especially, since waypoints are defined in space and time, we connect them trying to have some {\it comfortable} walking speed (i.e., close to the average human walking speed).
 Indeed, characters moving too slow or too fast are visually evident artifacts.
 Secondly, after having connected waypoints with linear trajectories, we deform them to remove any collisions by employing an iterative approach.
-This approach aims in minimizing as much as possible the changes to the initial trajectories.
+This approach aims at minimizing as much as possible the changes to the initial trajectories.
 %We do this through an iterative process trying to remove collisions with as limited as possible changes to the initial trajectories.
 We show improvements in the quality of results as compared to the original work by Yersin et al (\note{see Figure XXXXXXXX - same as previous paragraph, could keep only one of the two references, this one}).
 

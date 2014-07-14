@@ -22,6 +22,7 @@ Then, iteratively, we optimize the trajectories to handle collisions.
 We try to keep the generated trajectories as close as possible to the initial linear trajectories, to minimize the magnitude of collision-avoidance maneuvers.
 \panayiotis{How do we define this? Do we measure it?}
 \panayiotis{Could we present this as the principle of \textbf{least effort}; i.e. the agents do as little as possible to achieve their goals without doing any complex movement\ldots}
+\claudia{Yes, I think we can present it as a least effort approach. Even though we cannot guarantee the optimal solution, it tends towards it as we are moving the closest points in the trajectories, aren't we?}
 
 To conclude, the main contribution of this work is an optimization-based algorithm to compute high quality animation trajectories ($2D$ global navigation trajectories) for individual crowd patches under constraints (expressed as a set of spatio-temporal boundary control points).
 
