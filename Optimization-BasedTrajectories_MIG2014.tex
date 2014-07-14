@@ -12,8 +12,9 @@
 
 \usepackage{subcaption}
 \usepackage[]{algorithm2e}
-\usepackage[table,dvipsnames]{xcolor}
+\usepackage[table]{xcolor}
 
+\usepackage[usenames,dvipsnames]{color}
 \newcommand\memo[1]{{\color{CornflowerBlue}#1}}
 \newcommand\devin[1]{{\color{BurntOrange}#1}}
 \newcommand\julien[1]{{\color{RubineRed}#1}}
@@ -32,7 +33,7 @@
 %\usepackage{algorithmic}
 
 
-\TOGonlineid{45678}
+\TOGonlineid{14}
 \TOGvolume{0}
 \TOGnumber{0}
 \TOGarticleDOI{1111111.2222222}
@@ -43,10 +44,14 @@
 
 \title{Optimization-based computation of locomotion trajectories for Crowd Patches}
 
-\author{Authors\thanks{e-mail:emails@emailplace}\\Institution}
+\author{Panayiotis Charalambous\thanks{e-mail:pcharala@inria.fr}\\Inria-Rennes}
 \pdfauthor{Authors}
 
-\keywords{keywords go here}
+\keywords{crowd simulation;
+	crowd patches;
+	virtual humans;
+	optimization
+}
 
 \begin{document}
 
@@ -59,7 +64,16 @@
 
 \begin{abstract}
 
-For many years now, simulating crowds in virtual environments has become more and more important. We want to see crowds in movies, TV shows, video-games, etc, and we want them to look good and natural.  An important part of crowd simulation is the way the people (or animals or any other moving agent inhabiting the environment) walk from one place to another. This paper concentrates in improving the crowd patches approach suggested by Yersin et al. ~\cite{Yersin:2009}. This method is based on the construction of animation blocks (called patches) stuck together to create a bigger and richer animation. The main purpose of this paper is to improve the way trajectories are created using an optimization-based method. Our main contributions include 1) a better way to match the end points of trajectories using the Gale-Shapley algorithm~\cite{gale1962college}; 2) a better method for collision avoidance that allows a more natural look to trajectories; and 3) a proposal for smoothing the final trajectories using cubic splines. We show in the results several examples of patches and how they were improved by using our method. We also discuss limitations and future work in the final sections.
+Over the past few years, simulating crowds in virtual environments has become an important tool to give life to virtual scenes; be it movies, games, training applications, etc.
+% For many years now, simulating crowds in virtual environments have become more and more important. We want to see crowds in movies, TV shows, video-games, etc, and we want them to look good and natural.
+An important part of crowd simulation is the way that people (or any other living entities such as animals) walk from one place to another.
+This paper concentrates in improving the \emph{crowd patches} approach proposed by Yersin et al. ~\cite{Yersin:2009} that aims in animating ambient crowds in a scene.
+This method is based on the construction of animation blocks (called patches) concatenated together under some constraints to create larger and richer animations with limited cost.
+An optimization based approach to generating smooth collision free trajectories for crowd patches is proposed in this work.
+%The main purpose of this paper is to improve the way trajectories are created using an optimization-based method.
+The contributions of this work to crowd patches are threefold; firstly a method to match the end points of trajectories based on the Gale-Shapley algorithm~\cite{gale1962college} is proposed that takes into account preferred velocities and space coverage, secondly a better method for collision avoidance is proposed that gives natural appearance to trajectories and finally a cubic spline approach is used to smooth out generated trajectories.
+%a proposal for smoothing the final trajectories using cubic splines.
+We demonstrate several examples of patches and how they were improved by our method, some limitations and directions for future improvements.
 
 
 
@@ -86,10 +100,10 @@ For many years now, simulating crowds in virtual environments has become more an
 \input{sec-intro}
 \input{sec-star}
 \input{sec-overview}
-%\input{sec-results}
-%\input{sec-discussion}
-%\input{sec-conclusions}
-%\input{sec-acknowledgements}
+\input{sec-results}
+\input{sec-discussion}
+\input{sec-conclusions}
+\input{sec-acknowledgements}
  
 
 \bibliographystyle{acmsiggraph}
