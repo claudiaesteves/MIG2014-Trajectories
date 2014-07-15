@@ -661,14 +661,13 @@ Instead of storing the splines, these are again sampled based on curvature to ge
 %% Removing collisions figure
 %%-------------------------------------------------------------------
 
-\panayiotis{Below needs cleaning up}
+There may be cases that even using a large number of tacks the splines will differ significantly from the original ones. 
+% that the splines still vary too much from the original trajectory.
+Threshold value $\alpha$ as was defined in Section~\ref{sec:method:remove-collisions}  is used to restrict on the maximum allowed displacement of splines.
+%We define a threshold based on the same threshold of collision to know how far a way a point can be moved.
+If a new control point surpasses this threshold, it is simply discarded.
+There may be extreme cases (for example, due to bad sampling of the tacks at the beginning), where the spline has extreme curves that are very different from the initial trajectory.
+In these extreme cases, most of the new control points would then not be added and the smoothed trajectory would end up being very similar to the original one.
 
-There may be cases, even with a healthy number of tacks,
-
- \claudia{What is {\it ``healthy"} in this context?}
-\memo {big enough number, not sure if there is a better word.} 
- 
-that the splines still vary too much from the original trajectory. We define a threshold based on the same threshold of collision to know how far a way a point can be moved. For these cases where the new control point surpasses the threshold, we simply don't add it to the set of new control points.  There may be extreme cases (for example, due to too a bad sampling of the tacks at the beginning), where the spline has extreme curves that are very different from our initial trajectory. In those extreme cases most of the new control points would not be added and the new smooth trajectory would end up being very similar to the original one.
-
-Splines are a good first approach for smoothing trajectories, but other techniques may be tried in the future to make them more similar to human trajectories.
+Splines are a relative cheap approach with nice smoothing of trajectories, but other techniques are currently being considered so that the generated trajectories are more close to real-life ones.
 
