@@ -6,7 +6,7 @@ The convergence of this algorithm, depends mostly on the how many agents we want
 
 There is an important limitation to be noted. 
 
-A problem arrises when two boundary control points that are closer than our collision threshold. If the points are also at exactly the same time the algorithm will not converge, since the only way to remove this collision is to move the boundary control points (which is forbidden). If the boundary control points are close in time collisions can be avoided, but may require the agents to move at unrealistic speeds.
+A problem arises when two boundary control points that are closer than our collision threshold. If the points are also at exactly the same time the algorithm will not converge, since the only way to remove this collision is to move the boundary control points (which is forbidden). If the boundary control points are close in time collisions can be avoided, but may require the agents to move at unrealistic speeds.
 
  Furthermore, two control points near the corners may have a repulsion force that forces one of them to go outside boundaries, for those cases, we have to either tell the algorithm to skip them (since there is no way to solve the collision) or let one of them go out of bounds. For this implementation, the latter was decided for simplicity.
 
