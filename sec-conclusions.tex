@@ -7,7 +7,7 @@ Patches then can be combined to efficiently represent an ambient crowd since mos
 Therefore, even though generating patches for dense patches using the proposed technique is expensive, run-time performance is not affected.
 
 Even though the algorithm produces collision free trajectories, there are some limitations.
-Some times trajectories are generated that enforce unrealistic speeds (much different than the comfort speed of humans) or abnormal looking behaviour can emerge such  as sudden turns.
+Some times trajectories that are generated enforce unrealistic speeds (much different than the comfort speed of humans) or abnormal looking behaviour can emerge such  as sudden turns.
 Additionally, the proposed algorithm is a greedy one since at each step local optimization is performed (i.e., we look at the agent with higher collision score) and therefore in the end a globally optimized solution might not be achieved.
 As future work, we plan on expanding this method using a global optimization approach that takes into account various plans of action and takes into account speed.
 Data-driven from real-world crowds can also used during optimization so that the generated trajectories provide more real life like behaviours.

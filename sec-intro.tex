@@ -1,29 +1,30 @@
 \section{Introduction}
 \label{sec:intro}
 
-Video Games are constantly displaying larger and livelier virtual environments due to increased computational power and advanced rendering techniques.
+Video Games are constantly displaying larger and livelier virtual environments due to increased computational power and advanced behavior and rendering techniques.
 For example, the recent Grand Theft Auto (GTA) game~\cite{GTA:web} takes place in Los Santos and its surroundings, a completely virtual city.
 In spite of the impressive quality and liveliness of the scene, Los Santos still remains relatively sparsely populated with virtual people.
-The reason for this phenomenon is the large computational cost required to get an {\it ambient crowd} in such large environments.
-To address this issue, the technique of {\it Crowd Patches} has been recently introduced by Yersin \etal \cite{Yersin:2009}.
+The reason for this phenomenon is the large computational cost required to simulation an {\it ambient crowd} into such large environments.
+To address this issue, the technique of {\it Crowd Patches} has been recently introduced by Yersin \etal~\cite{Yersin:2009}.
 
-{\it Crowd patches} are precomputed elements (patches) of crowd animations.
-Patches are time-periodic so that they can be endlessly played in time.
-The boundary conditions of precomputed animations are accurately controlled to enable combining patches in space (i.e., characters can move from in-between patches) and compose large ambient crowds.
+{\it Crowd patches} are precomputed elements (patches) of crowd animations that are time-periodic so that they can be endlessly played in time.
+To do so, the boundary conditions of precomputed animations are accurately controlled to enable combining patches in space and time so that characters can move between patches and compose large ambient crowds.
 This technique eases the process of designing performance efficient ambient crowds. 
 
 One problem with this technique however, is the computation of internal animation trajectories for patches that satisfy both, time-periodicity and boundary conditions amongst patches.
 Satisfying both of these constraints is difficult, since it is equivalent to computing collision-free trajectories that exactly pass through spatio-temporal waypoints (i.e., at some exact position in time) whilst at the same time solving possibly complex interactions between agents (collision-avoidance).
 In addition to that, trajectories should look as natural as possible.
 
-In this paper we propose a new optimization-based method to compute these internal trajectories.
-Our method starts by initially assigning linear space-time trajectories which are easy to compute and satisfy both, periodicity and boundary conditions, but at the same time might introduce collisions between characters.
-Then, iteratively, we optimize the trajectories to handle collisions.
-We try to keep the generated trajectories as close as possible to the initial linear trajectories, to minimize the magnitude of collision-avoidance maneuvers.
-\panayiotis{How do we define this? Do we measure it?}
-\panayiotis{Could we present this as the principle of \textbf{least effort}; i.e. the agents do as little as possible to achieve their goals without doing any complex movement\ldots}
-\claudia{Yes, I think we can present it as a least effort approach. Even though we cannot guarantee the optimal solution, it tends towards it as we are moving the closest points in the trajectories, aren't we?}
+In this paper a new optimization-based method to compute internal trajectories for patches is proposed.
+This method starts by initially assigning linear space-time trajectories which are easy to compute and satisfy both, periodicity and boundary conditions, but at the same time might introduce collisions between characters.
+Trajectories are then iteratively optimized to handle collisions.
+% Then, iteratively, we optimize the trajectories to handle collisions.
+This optimization procedure aims in generating trajectories that are as close as possible to the initial trajectories minimizing the number of collision avoidance maneuvers as much as possible.
+% We try to keep the generated trajectories as close as possible to the initial linear trajectories, to minimize the magnitude of collision-avoidance maneuvers.
+% \panayiotis{How do we define this? Do we measure it?}
+% \panayiotis{Could we present this as the principle of \textbf{least effort}; i.e. the agents do as little as possible to achieve their goals without doing any complex movement\ldots}
+% \claudia{Yes, I think we can present it as a least effort approach. Even though we cannot guarantee the optimal solution, it tends towards it as we are moving the closest points in the trajectories, aren't we?}
 
-To conclude, the main contribution of this work is an optimization-based algorithm to compute high quality animation trajectories ($2D$ global navigation trajectories) for individual crowd patches under constraints (expressed as a set of spatio-temporal boundary control points).
+Concluding, the main contribution of this work is an optimization-based algorithm to compute high quality navigation trajectories  for individual crowd patches under constraints expressed as sets of spatio-temporal boundary control points	.
 
-The remainder of this paper is organized as follows: Section \ref{sec:star} proposes a short overview on the state of the art. Section \ref{sec:method} details our technique to compute these internal trajectories. Then, in Section \ref{sec:results} some results, together with their performance and quality analysis are shown before a brief discussion and concluding remarks (Sections~\ref{sec:discussion} and \ref{sec:conclusions} respectively). 
+The remainder of this paper is organized as follows: Section~\ref{sec:star} presents a short overview on related work, Section~\ref{sec:method} details the proposed technique for trajectory generation, in Section~\ref{sec:results} some results are presented, together with their performance and quality analysis followed by brief discussion and concluding remarks (Sections~\ref{sec:discussion} and \ref{sec:conclusions} respectively). 

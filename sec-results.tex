@@ -140,8 +140,10 @@ This method is able to adjust to the placement of the control points (Figure~\re
 
 \textbf{Adaptability to density}
 The proposed method can adapt to different numbers of initial control points; i.e., it manages to generate smooth collision free trajectories for increasing larger numbers of trajectories (Figure~\ref{fig:res:inputs}).
-Increasing the number of control points increases density and the time required for calculating these trajectories but recall that crowd patches are \emph{precomputed} and therefore during simulation time huge numbers of moving agents can be simulated at limited cost.
-Again, trajectories aim to cover the patch's space.
+Increasing the number of control points increases density and the time required for calculating these trajectories but recall that crowd patches can be \emph{precomputed} and therefore during simulation time large numbers of moving agents can be simulated with small cost (compared to real-time simulation for example).
+Additionally, the proposed method aims in covering the entire patch's space over a period of time;
+density control is difficult using other real-time simulation techniques.
+%which is more difficult to control using other real-time simulation techniques.
 
 
 
