@@ -2,7 +2,7 @@
 \label{sec:discussion}
 
 \textbf{Convergence}
-The convergence of this algorithm, depends mostly on number of agents required in the virtual scene; large numbers of agents lead to long convergence time as well as the possibility the algorithm will not converge and the patch generation will fail.
+The convergence of this algorithm, depends mostly on the number of agents required in the virtual scene; large numbers of agents lead to long convergence time as well as the possibility that the algorithm will not converge and the patch generation will fail.
 Convergence failure can occur if at least two boundary control points are closer to the minimum allowed threshold $\alpha$ (Section~\ref{sec:method:remove-collisions}) at the same exact moment in time; this is by definition a convergence failure since \emph{boundary control points cannot be moved}.
 If on the other hand, the boundary control points differ slightly in time, the algorithm will converge but with a high probability of generating agents with unrealistic speeds.
 
@@ -10,8 +10,8 @@ If on the other hand, the boundary control points differ slightly in time, the a
 % 
 % A problem arises when two boundary control points that are closer than our collision threshold. If the points are also at exactly the same time the algorithm will not converge, since the only way to remove this collision is to move the boundary control points (which is forbidden). If the boundary control points are close in time collisions can be avoided, but may require the agents to move at unrealistic speeds.s
 
- Furthermore, two control points near the corners may have a repulsion force that pushes one of them to go outside the patch's boundaries.
-For these cases, two approaches can be taken; either ignore these two points or let one of the two points leave the bounds of the patch.
+ Furthermore, two control points near the corners may have a repulsion force that pushes one of them outside the of the patch's boundaries.
+For these cases, two approaches can be taken; either ignore these two points and move on or let one of the two points leave the bounds of the patch.
 %  we have to either tell the algorithm to skip them (since there is no way to solve the collision) or let one of them go out of bounds.
 In the current implementation the latter was employed due to its simplicity.
  
@@ -22,8 +22,8 @@ In the current implementation the latter was employed due to its simplicity.
 
 \textbf{Temporal modifications of control points}
 In this paper, mostly spatial corrections to the trajectories of the agents are employed.
-For some scenarios, moving control points in space might not be the best approach, since this could results in either agents moving with unnatural speeds or accelerations or to trajectories leaving the area of the patch as described in the previous paragraphs.
-Collisions can be avoided if temporal displacement is applied to control points without any spatial modification and in essence accelerate (or decelerate) agents.
+For some scenarios, moving control points in space might not be the best approach, since this could result in either agents moving with unnatural speed and accelerations or into trajectories leaving the area of the patch (as described in the previous paragraphs).
+Collisions can be avoided if temporal displacement is applied to control points without any spatial modification which in essence accelerate (or decelerate) agents.
 Obviously, this could resolve spatial issues such as out of boundary cases but care should be taken so that agents' velocities remain realistic.
 
 % it could provoke the control point to try moving outside of the patch boundaries or make a huge change in the agent's speed.   
@@ -35,15 +35,15 @@ Obviously, this could resolve spatial issues such as out of boundary cases but c
 A patch can have static objects; i.e., obstacles.
 Having a small number of obstacles is equivalent to defining a set of special agents that are not allowed to move.
 Obviously, placement of these obstacles plays a significant role on the trajectory generation since boundary control points could be ``trapped'' or if a trajectory passes closely between two static obstacles it would end up in a position where the collision avoidance algorithm would not converge since a control point could end up oscillating between the obstacles.
-One possible solution to that is grouping obstacles together as a bigger one with a cost on the free area that can be used by other trajectories.
-Approaches to handle dense obstacles are currently being considered as alternatices to this approach and on the design of crowd patches.
-Obstacle handling is still under development.
+One possible solution to that is grouping obstacles together as bigger ones with a cost on the free area that can be used by other trajectories.
+Approaches to handle dense obstacles are currently being considered as alternatives to this approach and on the design of crowd patches.
+Obstacle handling is still under development and not implemented in the current version of the algorithm.
 
 % Earlier in this paper, it is mentioned that a patch may have static agents, called obstacles. The way of incorporating obstacles is still being discussed. For a small number of obstacles, they can be considered as special agents that do not move. The problem that arises is that obstacles must be well placed. When a trajectory travels between two obstacles it can cause an infinite loop. The trajectory will oscillate between the obstacles, but the collision will never be resolved. A possible solution for this, may be grouping the obstacles that are close to one another into a bigger obstacle. However, this would quickly start occupying the area of the patch. For that reason, a better technique for dealing with a dense number of obstacles must be developed. s
 
 \textbf{Evaluating the quality of motion}
-One of the largest issues in any crowd simulation work is evaluating the quality of the generated behaviour.
-Currently, this is done by visual inspection.
+One of the largest issues in crowd simulation research is evaluating the quality of generated behaviour.
+Currently, this is done by visual inspection which is a very biased approach.
 Several methods have been proposed to evaluate the quality of crowd motion in a quantitative approach that we plan on investigating as future work.
 For example Singh \etal~\cite{Singh2009SteerBench} propose to evaluate quality based on the capability of a crowd simulation algorithm of accomplishing simple scenarios.
-Lerner \etal~\cite{Lerner2010Context} and Guy \etal~\cite{Guy2012Statistical} take an alternative approach where the quality of a crowd simulator is compared to real-world data.
+Lerner \etal~\cite{Lerner2010Context} and Guy \etal~\cite{Guy2012Statistical} take alternative approaches where the quality of a crowd simulator is compared to real-world data.
