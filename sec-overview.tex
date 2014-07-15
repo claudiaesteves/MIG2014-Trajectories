@@ -5,8 +5,8 @@
 
 %\note{Overview: remind definitions on crowd patches: patch, pattern, spatio-temporal waypoints (boundary conditions: input, output, initial states // boundary conditions should be strictly enforced. Movable control points), period of time \dots}
 
-In this section the proposed methodology for generating trajectories for crowd patches is presented.
-We first give some definitions and notations (Section~\ref{sec:method:definitions}), followed by an overview of the method (Section~\ref{sec:method:overview}) and the three main steps of the algorithm; control point matching,  collision handling and trajectory smoothing (Sections~\ref{sec:method:init}--\ref{sec:method:smoothing}).
+In this section we present the proposed methodology for generating trajectories for patches.
+We first give some definitions and notations (Section~\ref{sec:method:definitions}), followed by an overview of the method (Section~\ref{sec:method:overview}), and the description of our method to generate initial trajectories, handle collisions and smooth out the resulting trajectories (Sections~\ref{sec:method:init}--\ref{sec:method:smoothing}).
 
 %%===============================================================
 %% Subsection: Patch Definitions
@@ -191,22 +191,22 @@ A more detailed look on all three steps follows in the remainder of this section
 \subsection{Connecting Boundary Control Points}
 \label{sec:method:init}
 
-The first step to the proposed algorithm is matching all entry and exit points in an optimal way.
+The first step to the proposed algorithm is to match all entry and exit points in an optimal way.
 To do this, a measure of the match's quality has to be defined.
 %we have to measure how good or bad a match is.
 Intuitively, there are some matches that are better than others; e.g., judging by observation, trajectories passing near the center of the patch forcing in essence the characters to cover more space look better than the ones staying close to the borders.
 Some other aspects can also be considered, such as how close the speed needed by an agent to travel from an entry to an exit point is compared to typical walking comfort speeds of humans.
 A comfort speed of $u_{cft} = 1.33~m/s$, which is the normal walking speed of humans in an unconstrained environment is used in this work \cite{Whittle2003Gait}.
 
-For a square patch, an order of preference between matching patterns is defined; matching points between opposing patterns are preferred, followed by neighboring ones and finally with points that lie on the same pattern.
+For a square patch, an order of preference between matching patterns is defined; matching points between opposing patterns are preferred, followed by neighboring ones and finally with points on the pattern itself.
 %Then the points on the contiguous pattern and finally, the points that are in the same pattern.
 For any of these cases, if there exist multiple possible matching options on the same pattern, the point whose associated trajectory is closest to the $u_{cft}$ is selected.
 
 To solve this matching problem, the \emph{Gale-Shapley algorithm}~\cite{gale1962college} (see Algorithm~\ref{alg:stable-matching}), commonly referred to as the algorithm to solve the \emph{stable marriage problem} is employed. 
-This algorithm assures that at the end, if we have Alice engaged to Bob and Carol engaged to Dave, it is not possible for Alice to prefer Dave and Dave to prefer Alice -- this is called a \emph{stable match}.
-%
+This algorithm assures that at the end, if we have Alice engaged to Bob and Carol engaged to Dave, it is not possible for Alice to prefer Dave and Dave to prefer Alice -- this is called a \emph{stable match}.  
+
 Algorithm~\ref{alg:stable-matching} demonstrates the Gale-Shapley algorithm in relation to two equal lists of men and women who are being matched for marriage.
-However the algorithm generalizes to any matchable objects, which in this case are entry and exit points.
+However the algorithm generalizes to any matchable objects, which in our case are entry and exit points.
 
 %%-------------------------------------------------------------------
 %% The Stable Marriage Algorithm by Gale-Shapley
@@ -243,8 +243,8 @@ Initialize all $m \in M$ and $w \in W$ to \textit{free} \;
 % All that is needed to use this algorithm is to generate preference values for entry and exit points.
 % For each of the entry Entry points, the following steps are appliedThis is done using the following steps:
 In order to apply Algorithm~\ref{alg:stable-matching}, preference values for all pairs of entry and exit points should be defined.
-To do so, every entry and exit point keep a \emph{proposal list} $\mathbf{L}_s$ indicating the order of preference for their matching (Table~\ref{tab:proposal-list}).
-The following approach is employed to rank each possible match-up:
+To do so, each entry and exit point keep a \emph{proposal list} $\mathbf{L}_s$ indicating the order of preference for their matching (Table~\ref{tab:proposal-list}).
+The following approach is employed to rank each possible matching:
 \begin{enumerate}
   \item Find the speed it would take to travel from an entry point to all exit points.
   Assuming that $(\mathbf{p}_1, t_1)$ and $(\mathbf{p}_2,t_2)$ are the position and time of the entry and exit points respectively, speed is defined as $u = s / {\Delta}t$ where $s=|\mathbf{p}_2-\mathbf{p}_1|$ and ${\Delta}t = t_2 - t_1$ when $t_2 > t_1$, otherwise ${\Delta}t=\pi + t_2 - t_1$.
@@ -257,7 +257,7 @@ The following approach is employed to rank each possible match-up:
   \end{equation}
   where
   		$u_{match} = arctan(|u_{cft} - u|) \in [0, \pi / 2)$ indicates closeness to desired speed with $0$ indicating maximum closeness. 
-    	$p = \{0, 2, 4\}$ defines a \emph{penalty} value that depends on where the two points lie relative to each other; for points on opposing patterns there is no penalty, for neighboring patches it is $2$ and for points on the same pattern it is $4$.\footnote{This can be generalized to any prism-like patch}
+    	$p = \{0, 2, 4\}$ defines a \emph{penalty} value that depends on where the two points lie relative to each other; for points on opposing patterns there is no penalty, for neighboring patches it is $2$ and for points on the same pattern it is $4$ (this can be generalized to any prism-like patch). 
 
   % and We add penalties for points being in the same patch, for those points, we add $4$. For points lying in the contiguous pattern we also add a smaller penalty, $2$.
   \item Sort $\mathbf{L}_s$ in ascending order; the first entry indicates the most desired exit point.
@@ -298,7 +298,7 @@ The following approach is employed to rank each possible match-up:
 %% The Proposal List table
 %%-------------------------------------------------------------------
 
-It should be emphasized here, that all control points (entry and exit) keeps their own proposal lists.
+It should be emphasized here, that each entry point keeps its own proposal list.
 After each entry point has been assigned a proposal list, Algorithm~\ref{alg:stable-matching} is used to define matches between the entry and exit points;
 every two points that remained engaged at the end of the algorithm become a pair.
 
