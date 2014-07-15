@@ -17,9 +17,7 @@ The results indicate a direct correlation of the number of iterations to the tim
 More importantly, increasing the number of control points decreases performance exponentially due to the increased density.
 
 Additionally, some of the experiments having more than a total of $60$ control points ($0.6\%$ of the experiments) had very slow convergence rates and were forced to stop at $2000$ iterations resulting in some collisions in the patch.
-Examining the patches that failed to converge we observed that this was mainly due to the placement of the initial control points: if control points are clustered on a subset of the patch's sides matching between them is more difficult and non-optimal.
-To account for this (assuming that the whole crowd patch generation is completely automatic) a better control point generation algorithm must be implemented.
-
+Examining the patches that failed to converge we observed that this was mainly due to the placement of the initial boundary control points; if these points are placed too close together then it may be impossible to resolve collisions while staying within the patch and maintaining realistic speed.
 
 
 % Performance was measured on a computer with an Intel Xeon quad core 2.8 GHz processor and 8GB of RAM. We found trajectories for patches with randomly generated entry and exit points. The patches all had base square of size 16 by 16. The period was 10 seconds. There were 20 samples for each number of agents between 1 and 50 for a total of 1000 samples. 994 of these were collision free. The other 6 were stopped after they reached 2000 iterations. We recorded the number of iterations required for collision free trajectories as well as the computation time in seconds.
@@ -139,7 +137,7 @@ This method is able to adjust to the placement of the control points (Figure~\re
 
 
 \textbf{Adaptability to density}
-The proposed method can adapt to different numbers of initial control points; i.e., it manages to generate smooth collision free trajectories for increasing larger numbers of trajectories (Figure~\ref{fig:res:inputs}).
+The proposed method can adapt to different numbers of initial control points; i.e., it manages to generate smooth collision free trajectories for large numbers of trajectories (Figure~\ref{fig:res:inputs}).
 Increasing the number of control points increases density and the time required for calculating these trajectories but recall that crowd patches can be \emph{precomputed} and therefore during simulation time large numbers of moving agents can be simulated with small cost (compared to real-time simulation for example).
 Additionally, the proposed method aims in covering the entire patch's space over a period of time;
 density control is difficult using other real-time simulation techniques.
