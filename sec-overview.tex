@@ -76,13 +76,11 @@ The following conditions must be respected in each sequence of trajectories asso
 
 \begin{enumerate}
 	\item $\mathbf{p}_{initial}$ and $\mathbf{p}_{final}$ must be points on the borders of $\mathbf{A}$ otherwise they cannot be exogenous agents.
-	\item If the sequence is composed by more than one trajectories, the ending position of one trajectory should be the same as the starting position of the next one to ensure continuity:
-	$$\tau_i(t_{end}) = \tau_{i+1}(t_{start}),	\hspace{0.2cm} \forall i < n$$
-	$$\tau_n(t_{end}) = \tau_{1}(t_{start})$$
-	
+	\item If the sequence is composed by more than one trajectories, the ending position of one trajectory should be the same as the starting position of the next one to ensure continuity\footnote{See refer to~\cite{Yersin:2009} for more details}:
+	$\tau_i(t_{\pi}) = \tau_{i+1}(t_{0}),	\hspace{0.2cm} \forall i < n$.
 \end{enumerate}
 
-Note that the second set of conditions implies that in sequences with multiple trajectories, each middle trajectory must be fully defined in the period of time $[0,\pi]$, while $\tau_1$ must be defined in $[t_{initial},\pi]$ and $\tau_n$ must be defined in $[0, t_{final}]$.
+Note that the second condition implies that in sequences with multiple trajectories, each middle trajectory must be fully defined in the period of time $[0,\pi]$, while $\tau_1$ must be defined in $[t_{initial},\pi]$ and $\tau_n$ must be defined in $[0, t_{final}]$.
 
 % \claudia{I am a bit confused with the parameter $\pi$. Is this the whole-animation time or is it just the parameter for each section of a trajectory (and also the complete trajectory)? I think the notation is clearer like in the next section with $\pi^{(i)}$ for the ending parameter of a subsection and just $\pi$ for the ending parameter of the overall trajectory. What do you think?}
 
@@ -96,8 +94,8 @@ A patch can be considered as a spatio-temporal right prism depending on the type
 A \textbf{pattern} can be defined as one lateral face of the prism (Figure~\ref{fig:definitions}).
 Specifically, it is a rectangle whose base is one of the edges of the polygonal area (we define $\mathbf{l} \in \mathbb{R}^2$ as this two dimensional vector), and its height is equal to the period $\pi$.
 In addition to these, patterns also include the sets $\mathbf{I}$ and $\mathbf{O}$ of Input and Output boundary control points respectively.
-The input set contains the boundary control points where exogenous agents begin their trajectories; we call these \emph{Entry Points}.
-Conversely the elements of output are called \emph{Exit Points}; they establish the position in time and space that the exogenous agents finish their paths.
+The input set contains the boundary control points where exogenous agents begin their trajectories; called the \emph{Entry Points}.
+Conversely the output control points are called \emph{Exit Points}; they establish the position in time and space that the exogenous agents finish their paths.
 Formally defined, a pattern $\mathbf{P}^{(i)}$ is:
 
 \begin{equation}
@@ -107,20 +105,22 @@ Formally defined, a pattern $\mathbf{P}^{(i)}$ is:
 
 To populate virtual environments, patches are concatenated together.
 Thus, continuity between trajectories should be enforced for exogenous agents passing through two contiguous patches.
-This means that two adjacent patches must have a similar pattern on the side they share; i.e., the vector $l$ and period $\pi$ must be the same and the input and output sets must be exchanged.
-More formally, having two patterns $\mathbf{P}_1$ and $\mathbf{P}_2$ where
-$P^{(1)}=\{\mathbf{l}^{(1)}, \pi^{(1)}, \mathbf{I}^{(1)}, \mathbf{O}^{(1)}\}$ and~
-$P^{(2)}=\{\mathbf{l}^{(2)}, \pi^{(2)}, \mathbf{I}^{(2)}, \mathbf{O}^{(2)}\}$, then, in order to satisfy $C^0$ continuity the following must apply:
+This means that two adjacent patches must have a similar pattern on the side they share; i.e., the vector $\mathbf{l}$ and period $\pi$ must be the same and the input and output sets must be exchanged.
+More formally, having two patterns $\mathbf{P}^{(1)}$ and $\mathbf{P}^{(2)}$ where
+$\mathbf{P}^{(1)}=\{\mathbf{l}^{(1)}, \pi^{(1)}, \mathbf{I}^{(1)}, \mathbf{O}^{(1)}\}$ and
+$\mathbf{P}^{(2)}=\{\mathbf{l}^{(2)}, \pi^{(2)}, \mathbf{I}^{(2)}, \mathbf{O}^{(2)}\}$, then, in order to satisfy $C^0$ continuity the following must apply:
 
 \begin{equation}
 	\mathbf{l}^{(1)}=\mathbf{l}^{(2)}, \pi^{(1)}=\pi^{(2)}, \mathbf{I}^{(1)} = \mathbf{O}^{(2)}, \mathbf{I}^{(2)} = \mathbf{O}^{(1)}
 % 	\forall \mathbf{cp}_i \in \mathbf{I}^{(1)} \exists \mathbf{cp}_o \in \mathbf{O}^{(2)}
 \end{equation}
 
-Under these conditions, $P_1$ is the mirror pattern of $P_2$ and vice versa.
-When these patches are animated, agents will be going from one patch to adjacent ones. 
-If the area $\mathbf{A}$ of a patch is a square then 4 patterns are defined, one per side.
-Patterns defined by a patch have the property that the sum of the cardinality of all the inputs is the same as the sum of the cardinality of all outputs; we call this the parity condition: $\sum(|inputs|)= \sum(|outputs|)$.
+Under these conditions, $\mathbf{P}^{(1)}$ is the mirror pattern of $\mathbf{P}^{(2)}$ and vice versa.
+When these patches are animated, agents will be going from one patch to its adjacent ones. 
+If the area $\mathbf{A}$ of a patch is a square then four  patterns are defined, one per side.
+Importantly, patterns defined by a patch have the property that the sum of the cardinality of all the inputs is the same as the sum of the cardinality of all outputs; we call this the \emph{parity condition} of the patch:
+
+$$\sum_{i \in \text{patch}}|I^{(i)}| = \sum_{i \in \text{patch}}|O^{(i)}|$$
 
 A patch defines a set of patterns, and conversely, a set of patterns that satisfies the parity condition (i.e. all patterns in the set have same period and whose vectors define a convex polygonal area) can be used to create a patch indirectly.
 
@@ -155,18 +155,18 @@ A patch defines a set of patterns, and conversely, a set of patterns that satisf
 \subsection{Overview}
 \label{sec:method:overview}
 
-The objective of the proposed work is to generate a patch given a set of patterns.
+The objective of the proposed work is to generate patches given a set of patterns for all the sides of the patch.
 This implies that given a set of constraints such as input and output spatio-temporal control points, a set of believable collision-free trajectories that interconnect all of them should be generated.
 This process has three main steps (Figure~\ref{fig:overview}):
 \begin{enumerate}
-  \item Match the elements in the Input and Output sets contained within a patch. {--}
-  In this step, entry and exit points are connected based on a score function that tries to keep agents close to their preferred speed while at the same time avoiding connections to similar patterns, thus reducing unwanted u-turns.
+  \item Match the elements in the Input and Output sets contained within a patch {--}
+  Entry and exit points are connected based on a score function that tries to keep agents close to their preferred speed while at the same time avoiding connections to similar patterns, thus reducing unwanted u-turns.
   The input for this step is a set of patterns and the output is a set of piecewise linear trajectories connecting the entry and exit points.
-  \item Create collision free trajectories for these pairings.{--}
-  Starting from simple line trajectories; bend them by iterative subdivisions until they are collision free.
+  \item Create collision free trajectories for these pairings {--}
+  Starting from simple line trajectories; successive bending is applied by iterative subdivisions until they are collision free.
   %W0e0 start with simple line trajectories and start bending them until they are collision free.
   Points lying at the borders, i.e. entry and exit points, are hard constraints and can never be moved.
-  \item Smooth out trajectories (if needed).{--}
+  \item Smooth out trajectories (if needed) {--}
    Splines are used as a final step to minimize the hard turns ensuring that the smoothed-out trajectories stay as close as possible to the original ones from Step $2$ to avoid introducing new collisions.
 %    We make sure the new trajectories stay close to the original ones, lest we create new collisions.
 \end{enumerate}
@@ -186,7 +186,7 @@ This process has three main steps (Figure~\ref{fig:overview}):
 % - step 3 is smoothing
 % }       
 
-A more detailed look on all three steps is given over the remainder of this section.
+A more detailed look on all three steps follows in the remainder of this section.
 
 \subsection{Connecting Boundary Control Points}
 \label{sec:method:init}
