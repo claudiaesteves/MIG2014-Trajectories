@@ -10,14 +10,15 @@ Each of the experiments described in the following paragraphs were for patches o
 % As expected, increasing the number of initial control points increases the time required for the algorithm to converge to collision free trajectories (Figure~\ref{fig:res:performance}) due to increased crowd density.
 All the performance measurements presented in this section were run on a single thread of an Intel Xeon quad core $2.8$ GHz processor having $8$GB of RAM (Figure~\ref{fig:res:performance}).
 % For the results presented here , patches had an area of $A = 16m * 16m$ and period $\pi = 10sec$.
-Each experiment consisted of placing equal numbers of entry/exit points in random positions around the border of the patches.
+Each experiment consisted of placing equal numbers of entry/exit points in random positions in time around the borders of the patches.
 For each possible number of entry/exit points (ranging from $1-50$) the experiment was run multiple times ($20$) resulting in $1000$ different patches.
 For each one of the experiments, time and number of iterations required for convergence were measured.
 The results indicate a direct correlation of the number of iterations to the time required for convergence.
 More importantly, increasing the number of control points decreases performance exponentially due to the increased density.
 
-Additionally, some of the experiments having more than a total of $60$ control points ($0.6\%$ of the experiments) had very slow convergence rates and were forced to stop at $2000$ iterations resulting in some collisions in the patch.
+Additionally, some of the experiments having more than a total of $30$ pairs of entry-exit control points ($0.6\%$ of the experiments) had very slow convergence rates and were forced to stop at $2000$ iterations resulting in some collisions in the patch.
 Examining the patches that failed to converge we observed that this was mainly due to the placement of the initial boundary control points; if these points are placed too close together then it may be impossible to resolve collisions while staying within the patch and maintaining realistic speed.
+This can also be due to the fact that the proposed approach resolves local minima at each step using a greedy approach.
 
 
 % Performance was measured on a computer with an Intel Xeon quad core 2.8 GHz processor and 8GB of RAM. We found trajectories for patches with randomly generated entry and exit points. The patches all had base square of size 16 by 16. The period was 10 seconds. There were 20 samples for each number of agents between 1 and 50 for a total of 1000 samples. 994 of these were collision free. The other 6 were stopped after they reached 2000 iterations. We recorded the number of iterations required for collision free trajectories as well as the computation time in seconds.
@@ -138,7 +139,7 @@ This method is able to adjust to the placement of the control points (Figure~\re
 
 \textbf{Adaptability to density}
 The proposed method can adapt to different numbers of initial control points; i.e., it manages to generate smooth collision free trajectories for large numbers of trajectories (Figure~\ref{fig:res:inputs}).
-Increasing the number of control points increases density and the time required for calculating these trajectories but recall that crowd patches can be \emph{precomputed} and therefore during simulation time large numbers of moving agents can be simulated with small cost (compared to real-time simulation for example).
+Increasing the number of control points increases density and the time required for calculating these trajectories but recall that crowd patches can be \emph{precomputed} and therefore during simulation time large numbers of moving agents can be animated with small cost (compared to real-time simulations for example).
 Additionally, the proposed method aims in covering the entire patch's space over a period of time;
 density control is difficult using other real-time simulation techniques.
 %which is more difficult to control using other real-time simulation techniques.
@@ -183,7 +184,7 @@ density control is difficult using other real-time simulation techniques.
 
 \textbf{Collision Anticipation}
 In the original work~\cite{Yersin:2009} Helbing's social forces \cite{Helbing:2005} approach was used to handle collisions.
-One problem with that approach is the lack of anticipation by agents; agents handle collisions late resulting in unnatural looking trajectories even for simple scenarios such as the one in Figure~\ref{fig:res:helbing} whereas the proposed approach emulates better anticipatory behaviour.
+One problem with that approach is the lack of anticipation by agents; they handle collisions late resulting in unnatural looking trajectories even for simple scenarios such as the one in Figure~\ref{fig:res:helbing} whereas the proposed approach emulates better anticipatory behaviour.
 
 %%----------------------------------------------------------------
 %% Figure: Collision Anticipation
@@ -194,7 +195,7 @@ One problem with that approach is the lack of anticipation by agents; agents han
 	\begin{subfigure}[b]{0.49\linewidth}
 	 \centering
 		\includegraphics[width=\linewidth]{images/res-helbing-crossing.png}
-		\caption{Helbing}
+		\caption{\cite{Yersin:2009}}
 	 \end{subfigure}
 	%
 	\begin{subfigure}[b]{0.49\linewidth}
