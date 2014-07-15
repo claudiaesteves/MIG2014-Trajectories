@@ -42,9 +42,17 @@
 \TOGdataURL{}
 \TOGcodeURL{}
 
-\title{Optimization-based computation of locomotion trajectories for Crowd Patches}
+\title{Optimization-based Computation of Locomotion Trajectories for Crowd Patches}
 
-\author{Panayiotis Charalambous\thanks{e-mail:pcharala@inria.fr}\\Inria-Rennes}
+% \author{
+% Jose Guillermo Rangel Ramirez\thanks{e-mail:josguil@cimat.mx}
+% Panayiotis Charalambous\thanks{e-mail:pcharala@inria.fr}
+% 
+% \\
+% $^1$ Centro de Investigacion en Matematicas, A.C. (CIMAT), Mexico
+% $^2$ Inria-Rennes, France
+% }
+
 \pdfauthor{Authors}
 
 \keywords{crowd simulation;
@@ -66,14 +74,16 @@
 
 Over the past few years, simulating crowds in virtual environments has become an important tool to give life to virtual scenes; be it movies, games, training applications, etc.
 % For many years now, simulating crowds in virtual environments have become more and more important. We want to see crowds in movies, TV shows, video-games, etc, and we want them to look good and natural.
-An important part of crowd simulation is the way that people (or any other living entities such as animals) walk from one place to another.
-This paper concentrates in improving the \emph{crowd patches} approach proposed by Yersin et al. ~\cite{Yersin:2009} that aims in animating ambient crowds in a scene.
+An important part of crowd simulation is the way that people
+%(or any other living entities such as animals)
+move from one place to another.
+This paper concentrates in improving the \emph{crowd patches} approach proposed by Yersin et al.~\cite{Yersin:2009} that aims in efficiently animating ambient crowds in a scene.
 This method is based on the construction of animation blocks (called patches) concatenated together under some constraints to create larger and richer animations with limited cost.
-An optimization based approach to generating smooth collision free trajectories for crowd patches is proposed in this work.
+An optimization based approach to generate smooth collision free trajectories for crowd patches is proposed in this work.
 %The main purpose of this paper is to improve the way trajectories are created using an optimization-based method.
-The contributions of this work to crowd patches are threefold; firstly a method to match the end points of trajectories based on the Gale-Shapley algorithm~\cite{gale1962college} is proposed that takes into account preferred velocities and space coverage, secondly a better method for collision avoidance is proposed that gives natural appearance to trajectories and finally a cubic spline approach is used to smooth out generated trajectories.
+The contributions of this work to the crowd patches framework are threefold; firstly a method to match the end points of trajectories based on the Gale-Shapley algorithm~\cite{gale1962college} is proposed that takes into account preferred velocities and space coverage, secondly an improved algorithm for collision avoidance is proposed that gives natural appearance to trajectories and finally a cubic spline approach is used to smooth out generated trajectories.
 %a proposal for smoothing the final trajectories using cubic splines.
-We demonstrate several examples of patches and how they were improved by our method, some limitations and directions for future improvements.
+We demonstrate several examples of patches and how they were improved by the proposed method, some limitations and directions for future improvements.
 
 
 
@@ -83,7 +93,7 @@ We demonstrate several examples of patches and how they were improved by our met
 
 \begin{CRcatlist}
 %  \CRcat{I.3.3}{Computer Graphics}{Three-Dimensional Graphics and Realism}{Display Algorithms}
-  %\CRcat{I.3.7}{Computer Graphics}{Three-Dimensional Graphics and Realism}{Radiosity};
+  \CRcat{I.3.7}{Computer Graphics}{Three-Dimensional Graphics and Realism}{Animation};
 \end{CRcatlist}
 
 \keywordlist
