@@ -155,7 +155,7 @@ A patch defines a set of patterns, and conversely, a set of patterns that satisf
 \subsection{Overview}
 \label{sec:method:overview}
 
-The objective of the proposed work is to generate patches given a set of patterns for all the sides of the patch.
+The objective of the proposed work is to generate patches given a set of patterns (one for each side of the patch).
 This implies that given a set of constraints such as input and output spatio-temporal control points, a set of believable collision-free trajectories that interconnect all of them should be generated.
 This process has three main steps (Figure~\ref{fig:overview}):
 \begin{enumerate}
@@ -191,18 +191,18 @@ A more detailed look on all three steps follows in the remainder of this section
 \subsection{Connecting Boundary Control Points}
 \label{sec:method:init}
 
-The first step to the proposed algorithm is to match all the entry and exit points in an optimal way.
+The first step to the proposed algorithm is to match all entry and exit points in an optimal way.
 To do this, a measure of the match's quality has to be defined.
 %we have to measure how good or bad a match is.
-Intuitively, there are some matches that are better than others; e.g., judging by observation, trajectories passing near the center of the patch look better than the ones staying close to the borders forcing in essence the characters to cover more space.
+Intuitively, there are some matches that are better than others; e.g., judging by observation, trajectories passing near the center of the patch forcing in essence the characters to cover more space look better than the ones staying close to the borders.
 Some other aspects can also be considered, such as how close the speed needed by an agent to travel from an entry to an exit point is compared to typical walking comfort speeds of humans.
 A comfort speed of $u_{cft} = 1.33~m/s$, which is the normal walking speed of humans in an unconstrained environment is used in this work \cite{Whittle2003Gait}.
 
-For a square patch, we define an order of preference between matching; first we prefer to match points between opposing patterns, followed by neighboring ones and finally with points on the pattern itself.
+For a square patch, an order of preference between matching patterns is defined; matching points between opposing patterns are preferred, followed by neighboring ones and finally with points on the pattern itself.
 %Then the points on the contiguous pattern and finally, the points that are in the same pattern.
-For any of these cases, if there exist multiple possible matching options on the same pattern, the point whose associated trajectory is closest to the defined comfort speed is selected.
+For any of these cases, if there exist multiple possible matching options on the same pattern, the point whose associated trajectory is closest to the $u_{cft}$ is selected.
 
-To solve this matching problem, we employ the \emph{Gale-Shapley algorithm}~\cite{gale1962college} (see Algorithm~\ref{alg:stable-matching}), commonly referred to as the algorithm to solve the \emph{stable marriage problem}. 
+To solve this matching problem, the \emph{Gale-Shapley algorithm}~\cite{gale1962college} (see Algorithm~\ref{alg:stable-matching}), commonly referred to as the algorithm to solve the \emph{stable marriage problem} is employed. 
 This algorithm assures that at the end, if we have Alice engaged to Bob and Carol engaged to Dave, it is not possible for Alice to prefer Dave and Dave to prefer Alice -- this is called a \emph{stable match}.  
 
 Algorithm~\ref{alg:stable-matching} demonstrates the Gale-Shapley algorithm in relation to two equal lists of men and women who are being matched for marriage.
