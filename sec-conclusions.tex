@@ -3,14 +3,15 @@
 
 A novel optimization based technique for generating trajectories for crowd patches has been presented;
 given an empty patch and a set of spatio-temporal control points on the edges of the patch that define entry and exit points for characters, a set of smooth collision free trajectories is generated.
-Patches then can be combined to efficiently represent an ambient crowd since most of the calculations are done at pre-processing; no collision handling is performed at run-time.
+Patches can then be combined to efficiently represent an ambient crowd since most of the calculations are done at pre-processing; no collision handling is performed at run-time.
 Therefore, even though generating patches for dense patches using the proposed technique is expensive, run-time performance is not affected.
 
 Even though the algorithm produces collision free trajectories, there are some limitations.
 Some times trajectories that are generated enforce unrealistic speeds (much different than the comfort speed of humans) or abnormal looking behaviour can emerge such  as sudden turns.
-Additionally, the proposed algorithm is a greedy one since at each step local optimization is performed (i.e., we look at the agent with higher collision score) and therefore in the end a globally optimized solution might not be achieved.
+Additionally, the proposed algorithm is a greedy one since at each step local optimization is performed (i.e., we look at the agent with higher collision score) and therefore a globally optimal solution might not be achieved.
 As future work, we plan on expanding this method using a global optimization approach that takes into account various plans of action and takes into account speed.
 Data-driven from real-world crowds can also used during optimization so that the generated trajectories provide more real life like behaviours.
+Evaluating the quality of the generated trajectories is one of the most important issues we are investigating.
 Finally, collision points are moved in space; an approach that moves trajectories in space and time could potentially solve unrealistic looking behaviours, remove motion artifacts and converge faster.
 % We present a novel technique for computing trajectories for use in crowd patches. 
 % We can take an empty patch and generate trajectories within that can represent human motion. Our technique produces smooth collision free motion. This algorithm is slow to converge, especially with larger groups. Furthermore while our approach produces collision free trajectories it is lacking in other aspects of human motion. For one, agents can reach unrealistic speeds. Additionally agents can have abnormal motion that is not true to human behavior.
