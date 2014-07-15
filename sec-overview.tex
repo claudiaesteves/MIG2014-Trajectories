@@ -668,11 +668,9 @@ Instead of storing the splines, these are again sampled based on curvature to ge
 There may be cases, even with a healthy number of tacks,
 
  \claudia{What is {\it ``healthy"} in this context?}
-
+\memo {big enough number, not sure if there is a better word.} 
+ 
 that the splines still vary too much from the original trajectory. We define a threshold based on the same threshold of collision to know how far a way a point can be moved. For these cases where the new control point surpasses the threshold, we simply don't add it to the set of new control points.  There may be extreme cases (for example, due to too a bad sampling of the tacks at the beginning), where the spline has extreme curves that are very different from our initial trajectory. In those extreme cases most of the new control points would not be added and the new smooth trajectory would end up being very similar to the original one.
 
-Having splines for trajectories is better than having simple straight lines, but we know humans don't  follow either of them when walking,  so other methods can be tried to improve this initial approach.
-
-\claudia{Is there a reference to support the above statement?}
-
+Splines are a good first approach for smoothing trajectories, but other techniques may be tried in the future to make them more similar to human trajectories.
 
