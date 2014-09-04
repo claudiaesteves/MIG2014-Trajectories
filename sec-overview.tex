@@ -205,30 +205,29 @@ For any of these cases, if there exist multiple possible matching options on the
 To solve this matching problem, the \emph{Gale-Shapley algorithm}~\cite{gale1962college} (see Algorithm~\ref{alg:stable-matching}), commonly referred to as the algorithm to solve the \emph{stable marriage problem} is employed. 
 This algorithm assures that at the end, if we have Alice engaged to Bob and Carol engaged to Dave, it is not possible for Alice to prefer Dave and Dave to prefer Alice -- this is called a \emph{stable match}.
 %
-Algorithm~\ref{alg:stable-matching} demonstrates the Gale-Shapley algorithm in relation to two equal lists of men and women who are being matched for marriage.
-However the algorithm generalizes to any matchable objects, which in this case are entry and exit points.
+Algorithm~\ref{alg:stable-matching} demonstrates the Gale-Shapley algorithm in relation to two equal lists of entry and exit points  who are being matched for pairing.
 
 %%-------------------------------------------------------------------
 %% The Stable Marriage Algorithm by Gale-Shapley
 %%-------------------------------------------------------------------
 \begin{algorithm}[t]
 
-Initialize all $m \in M$ and $w \in W$ to \textit{free} \;
-\While {$ \mathbf{\exists}$ \textit{free} man $m$ who still has a woman $w$ to propose to} {
-	$w \leftarrow m's$ highest ranked woman to whom he has not yet proposed \;
-	\eIf {$w$ is \textit{free}}
+Initialize all $i \in \mathbf{I}$ and $o \in \mathbf{O}$ to \textit{free} \;
+\While {$ \mathbf{\exists}$ \textit{free} entry point $i$ who still has an exit point $o$ to propose to} {
+	$o \leftarrow i's$ highest ranked exit point to whom it has not yet proposed \;
+	\eIf {$o$ is \textit{free}}
 	{ 
-		$(m,w)$ become engaged \;
+		$(i,o)$ become paired \;
 	}
 	{
-		some pair $(m',w)$ already exists \;
-		\eIf {$w$ prefers $m$ to $m'$} 
+		some pair $(i',o)$ already exists \;
+		\eIf {$o$ prefers $i$ to $i'$} 
 		{
-			$(m,w)$ become engaged \;
-			$m'$ becomes \textit{free} \;
+			$(i,o)$ become paired \;
+			$i'$ becomes \textit{free} \;
 		}
 		{
-			 $(m',w)$ remain engaged;
+			 $(i',o)$ remain paired;
 		}
 	}
 }
