@@ -1,7 +1,7 @@
 \section{State of the Art}
 \label{sec:star}
 
-Most often, virtual environments are populated based on crowd simulation approaches~\cite{ThalmannBook:2013}.
+Most often, virtual environments are populated based on crowd simulation approaches~\cite{Reynolds87Flocks,Reynolds99Steering,ThalmannBook:2013}.
 An ambient crowd is generated from a large set of moving characters, mainly walking ones.
 Recent efforts in crowd simulation have enabled dealing with improving computational performance~\cite{PettreCAVW:2006,Treuille:2006}, dealing with high densities~\cite{Narain:2009} or controllable crowds~\cite{Guy:2009}.
 There has also been a lot of effort to develop velocity-based approaches~\cite{Paris:2007,VanDenBerg:2008} which display much smoother and realistic locomotion trajectories, especially thanks to anticipatory adaptation to avoid collisions between characters.
@@ -16,13 +16,14 @@ The key idea of this approaches is to indirectly define the crowd behavior rules
 Locally, trajectories are typically of good quality, because they reproduce real recorded ones.
 However, such approaches raise other difficulties: it is difficult to guarantee that the example database will cover all the required content and it can also be difficult to control behaviors and interactions displayed by characters if the database content is not carefully selected.
 Finally, those approaches are most of the time computationally demanding; even more so than traditional simulation based techniques.
+Some researchers, such as Boatright \etal~\cite{Boatright2014Generating} seek to find a middle ground between example and simulation based methods aiming for both the better quality provided by data-driven methods at speeds comparable to simulation methods.
 
-To solve both performance as well as quality issues, crowd patches were introduced by Yersin \etal~\cite{Yersin:2009}.
-The key idea is to generate an ambient moving crowd from a set of interconnected patches.
-Each patch is a kind of $3D$ animated texture element, which records the trajectories of several moving characters.
+An alternative to solve both performance and quality issues, are methods that interconnect pre-computed patches of animations~\cite{Yersin:2009,Kim2012Tiling,Jordao2014Crowd} to generate larger ambient crowd animations.
+%The key idea is to generate an ambient moving crowd from a set of interconnected patches.
+Crowd patches~\cite{Yersin:2009} more specifically are a kind of $3D$ animated texture elements, which record the trajectories of several moving characters.
 Trajectories are periodic in time so that the crowd motion can be played endlessly.
-Trajectories' boundary conditions at the geometrical limits of patches are controlled to be able to connect together two different patches with characters moving from one patch to another.
-Thus, a crowd animated from a set of patches have a seamless motion and patches' limits cannot easily be detected.
+Trajectories' boundary conditions at the geometrical limits of patches are spatio-temporally controlled to allow connecting together two different patches with characters moving from one patch to another.
+Thus, a crowd animated from a set of patches have seamless motion and patches' limits cannot easily be detected.
 The boundary conditions are all registered into {\it patterns}, which are sort of gates for patches with a set of spacetime input/output points.
 %For a more detailed expanation on the crowd patches approach please refer to~\cite{Yersin:2009}. 
 
@@ -30,20 +31,20 @@ Nevertheless, using the crowd patches approach, a limited set of patterns should
 % Therefore, instead of defining patches directly; these can be indirectly defined from a set of patter
 As a result, it is important to be able to compose a patch by starting from a set of patterns, and then deducing internal trajectories of patches from the set of boundary conditions defined by the patterns.
 As a result, we need to compute trajectories for characters that pass through a given set of spatio-temporal waypoints; i.e., characters should reach specific points in space at specific moments in time.
-This problem is difficult since generally speaking steering techniques for characters consider $2D$ spatial goals, but do not consider the time a character should take to reach its waypoint.
+This problem is difficult since generally speaking steering techniques for characters consider $2D$ spatial goals, but do not consider the exact time a character must take to reach its waypoint.
 Therefore, dedicated techniques are required. 
 
-Yersin~\etal suggest using an adapted Social Forces technique to compute internal trajectories~\cite{Helbing:2005}.
+Yersin~\etal suggest using an adapted Social Forces~\cite{Helbing:2005} technique to compute internal trajectories.
 The key idea is to connect input/output points together with linear trajectories and model characters as particles attracted by a goal moving along one of these linear trajectories, combined with repulsion forces to avoid collision between them and static obstacles.
 One problem with this approach is limited density level, as well as the level of quality of trajectories that suffer from the usual drawbacks of the Social Forces approach such as lack of anticipation, which results into unnatural looking local avoidance maneuvers (Figure~\ref{fig:res:helbing}).
 
 Compared to previous techniques we suggest formulating the problem of computing internal trajectories as an optimization problem.
-First, we suggest optimizing the way input and output points are connected.
+First, we suggest optimizing the way spatio-temporal input and output points are connected.
 Especially, since waypoints are defined in space and time, we connect them aiming for {\it comfortable} walking speeds (i.e., close to the average human walking speed).
 Indeed, characters moving too slow or too fast are visually evident artifacts.
 Secondly, after having connected waypoints with linear trajectories, we deform them to remove any collisions by employing an iterative approach.
 This approach aims at minimizing the changes to the initial trajectories.
 %We do this through an iterative process trying to remove collisions with as limited as possible changes to the initial trajectories.
-We demonstrate improvements in the quality of results as compared to the original work by Yersin \etal (Figure~\ref{fig:res:helbing}).
+We demonstrate improvements in the quality of results as compared to the original work by Yersin \etal (Section~\ref{sec:results}).
 
 
