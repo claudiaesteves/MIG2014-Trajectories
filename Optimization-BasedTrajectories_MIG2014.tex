@@ -51,12 +51,14 @@
 	Panayiotis Charalambous{$^3$}\\
 	Marc Christie{$^3$}~
 	Claudia Esteves{$^1$}~
-	Julien Pettre{$^3$}
+	Julien Pettr\'e{$^3$}
 	\\\\
 	$^1$ Centro de Investigacion en Matematicas, A.C. (CIMAT), Mexico
 	$^2$ University of Minnesota, USA
 	$^3$ Inria-Rennes, France
 }
+
+
 
 % \author{
 % 	Jose Guillermo Rangel Ramirez{$^1$}\thanks{e-mail:josguil@cimat.mx}~
@@ -71,7 +73,7 @@
 % 	$^3$ Inria-Rennes, France
 % }
 
-\pdfauthor{Authors}
+\pdfauthor{Jose Guillermo Rangel Ramirez, Devin Lange, Panayiotis Charalambous, Marc Christie, Claudia Esteves, Julien Pettr\'e}
 
 \keywords{crowd simulation;
 	crowd patches;
@@ -97,14 +99,16 @@ An important part of crowd simulation is the way that people
 %(or any other living entities such as animals)
 move from one place to another.
 This paper concentrates in improving the \emph{crowd patches} approach proposed by Yersin \etal~\cite{Yersin:2009} that aims in efficiently animating ambient crowds in a scene.
-This method is based on the construction of animation blocks (called patches) concatenated together under some constraints to create larger and richer animations with limited cost.
-An optimization based approach to generate smooth collision free trajectories for crowd patches is proposed in this work.
+This method is based on the construction of animation blocks (called patches) concatenated together under some constraints to create larger and richer animations with limited run-time cost.
+Specifically, an optimization based approach to generate smooth collision free trajectories for crowd patches is proposed.
 %The main purpose of this paper is to improve the way trajectories are created using an optimization-based method.
 The contributions of this work to the crowd patches framework are threefold; firstly a method to match the end points of trajectories based on the Gale-Shapley algorithm~\cite{gale1962college} is proposed that takes into account preferred velocities and space coverage, secondly an improved algorithm for collision avoidance is proposed that gives natural appearance to trajectories and finally a cubic spline approach is used to smooth out generated trajectories.
 %a proposal for smoothing the final trajectories using cubic splines.
 We demonstrate several examples of patches and how they were improved by the proposed method, some limitations and directions for future improvements.
 
 \end{abstract}
+
+
 
 \begin{CRcatlist}
 %  \CRcat{I.3.3}{Computer Graphics}{Three-Dimensional Graphics and Realism}{Display Algorithms}
@@ -116,7 +120,7 @@ We demonstrate several examples of patches and how they were improved by the pro
 %% Use this only if you're preparing a technical paper to be published in the 
 %% ACM 'Transactions on Graphics' journal.
 
-\TOGlinkslist
+%\TOGlinkslist
 
 %% Required for all content. 
 
@@ -128,7 +132,7 @@ We demonstrate several examples of patches and how they were improved by the pro
 \input{sec-results}
 \input{sec-discussion}
 \input{sec-conclusions}
-% \input{sec-acknowledgements}
+\input{sec-acknowledgements}
  
 
 \bibliographystyle{acmsiggraph}
